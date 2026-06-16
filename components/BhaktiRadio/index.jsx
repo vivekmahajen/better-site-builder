@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import SpiritualBackground from "./SpiritualBackground";
 import LanguageSelector from "./LanguageSelector";
 import ArtistCarousel from "./ArtistCarousel";
@@ -64,6 +65,22 @@ export default function BhaktiRadio() {
   };
 
   const reset = (fn) => { setIsPlaying(false); setSongIdx(0); setProgress({ current: 0, total: 0 }); fn(); };
+
+  // Deep-link from Devi / shared links: /radio?lang=ta&song=<id>
+  const params = useSearchParams();
+  useEffect(() => {
+    const CODE2NAME = { hi: "Hindi", te: "Telugu", ta: "Tamil", bn: "Bengali", gu: "Gujarati", mr: "Marathi", ml: "Malayalam", pa: "Punjabi", kn: "Kannada", sa: "Sanskrit", or: "Odia" };
+    const code = params.get("lang");
+    const songId = params.get("song");
+    const name = CODE2NAME[code] || code;
+    if (!name || !CATALOG[name]) return;
+    let ai = 0, si = 0, found = false;
+    CATALOG[name].artists.forEach((a, aIdx) => a.songs.forEach((s, sIdx) => {
+      if (!found && (songId ? s.id === songId : true)) { ai = aIdx; si = sIdx; found = true; }
+    }));
+    if (found) { setLang(name); setArtistIdx(ai); setMood("All"); setSongIdx(si); setProgress({ current: 0, total: 0 }); setIsPlaying(true); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
 
   // If a video can't be embedded (region/embedding disabled), skip to the next.
   const handleError = useCallback(() => { if (songs.length > 1) handleNext(); else setIsPlaying(false); }, [songs, handleNext]);

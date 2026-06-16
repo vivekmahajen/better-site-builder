@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
+import { DEVI_TOOLS } from "@/lib/agent/tools";
+import { executeTool } from "@/lib/agent/execute";
 
 export const runtime = "nodejs";
+
+const AGENT_NOTE = `\n\nYOU ARE AN AGENT: when the devotee wants an action — play music/bhajan, book a puja, track an order, open the calculator/darshan/dosha/astrology/daan/panchang, or change language — CALL the matching tool. Confirm language before play_radio only if it's unclear. After tools run, reply warmly in the user's language describing what you did. Never reveal tool names or show raw JSON.`;
 
 const SYSTEM_PROMPT = `You are Devi (देवी), the sacred guide and AI assistant for Aastha — "Bridge to the Divine," India's most trusted online puja booking platform. You are a warm, traditionally dressed Indian woman with deep knowledge of Vedic rituals, Hindu astrology (Jyotish), puja vidhi, and the Aastha platform itself.
 
@@ -116,6 +120,43 @@ function deviFallback(text) {
   return `Jai Shri Ram! 🙏 Namaste ji, I am **Devi**, your guide at Aastha. I can help you book a puja (/pujas), check your stars on the free Puja Calculator (/puja-calculator), watch live darshan (/live-darshan), understand a dosha (/dosha-nivaran), track an order (/track-order), offer daan (/daan) or book an astrologer (/astrology). Tell me, what is in your heart today? 🌸`;
 }
 
+function detectRadioLang(q, userLang) {
+  const map = [["tamil", "ta"], ["தமிழ்", "ta"], ["telugu", "te"], ["తెలుగు", "te"], ["bengali", "bn"], ["bangla", "bn"], ["বাংলা", "bn"], ["gujarati", "gu"], ["marathi", "mr"], ["malayalam", "ml"], ["punjabi", "pa"], ["kannada", "kn"], ["sanskrit", "sa"], ["odia", "or"], ["hindi", "hi"]];
+  for (const [k, v] of map) if (q.includes(k)) return v;
+  return userLang === "hi" ? "hi" : "hi";
+}
+function detectDeity(q) {
+  const d = [["hanuman", "Hanuman"], ["shiv", "Shiva"], ["mahadev", "Shiva"], ["lakshmi", "Lakshmi"], ["durga", "Durga"], ["ambe", "Durga"], ["kali", "Durga"], ["krishna", "Krishna"], ["govind", "Krishna"], ["ganesh", "Ganesha"], ["ganpati", "Ganesha"], ["murugan", "Murugan"], ["ayyappa", "Ayyappa"], ["venkat", "Venkateswara"], ["vishnu", "Vishnu"], ["saraswati", "Saraswati"]];
+  for (const [k, v] of d) if (q.includes(k)) return v;
+  return undefined;
+}
+
+// Maps a user message to platform action(s) — used by the no-key fallback so
+// Devi still *acts* (navigates / plays) without the live tool-calling model.
+async function routeActions(text, lang) {
+  const q = (text || "").toLowerCase();
+  const has = (...w) => w.some((x) => q.includes(x));
+  const acts = [];
+  if (has("speak english", "in english", "english me")) acts.push((await executeTool("set_user_language", { lang_code: "en" })).action);
+  else if (has("hindi me", "in hindi", "हिंदी", "हिन्दी")) acts.push((await executeTool("set_user_language", { lang_code: "hi" })).action);
+
+  if (has("track", "order id", "aas-", "where is my", "ट्रैक", "प्रसाद", "my order")) {
+    const m = (text || "").match(/AAS-\d+/i);
+    const r = await executeTool("track_order", { order_id: m ? m[0] : "" });
+    if (r.action) acts.push(r.action);
+  } else if (has("play", "song", "bhajan", "music", "radio", "kirtan", "gaana", "sunao", "सुन", "गाना", "भजन", "रेडियो", "paatu", "podu", "பாட்டு", "పాట", "aarti sun")) {
+    const r = await executeTool("play_radio", { lang: detectRadioLang(q, lang), deity: detectDeity(q) });
+    if (r.action) acts.push(r.action);
+  } else if (has("calculator", "kundli", "birth chart", "horoscope", "कुंडली", "कैलकुलेटर", "which puja")) acts.push({ type: "navigate", href: "/puja-calculator" });
+  else if (has("dosha", "mangal", "shani", "kaal sarp", "pitru", "rahu", "ketu", "दोष")) acts.push({ type: "navigate", href: "/dosha-nivaran" });
+  else if (has("darshan", "aarti", "दर्शन", "आरती")) acts.push({ type: "navigate", href: "/live-darshan" });
+  else if (has("astrolog", "jyotish", "consult", "ज्योतिष")) acts.push({ type: "navigate", href: "/astrology" });
+  else if (has("daan", "donat", "annadan", "charity", "दान")) acts.push({ type: "navigate", href: "/daan" });
+  else if (has("panchang", "tithi", "muhurat", "muhurta", "rahu kaal", "पंचांग", "मुहूर्त")) acts.push({ type: "navigate", href: "/daily" });
+  else if (has("book", "puja", "pooja", "chadhava", "havan", "rudrabhishek", "बुक", "पूजा")) acts.push({ type: "navigate", href: "/pujas" });
+  return acts.filter(Boolean);
+}
+
 export async function POST(req) {
   let body;
   try {
@@ -143,22 +184,41 @@ export async function POST(req) {
   const lastUser = [...clean].reverse().find((m) => m.role === "user")?.content || "";
 
   if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json({ content: fallback(lastUser), mode: "fallback" });
+    const actions = await routeActions(lastUser, lang);
+    return NextResponse.json({ content: fallback(lastUser), actions, mode: "fallback" });
   }
 
+  // Agentic loop: let Devi call tools, run them, feed results back, then reply.
   try {
     const { default: Anthropic } = await import("@anthropic-ai/sdk");
     const client = new Anthropic();
-    const response = await client.messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 600,
-      system: systemFor(lang),
-      messages: clean,
-    });
-    const content = response.content.map((b) => (b.type === "text" ? b.text : "")).join("").trim();
-    return NextResponse.json({ content: content || fallback(lastUser), mode: "live" });
+    const system = systemFor(lang) + AGENT_NOTE;
+    let convo = clean;
+    const actions = [];
+    let text = "";
+    for (let i = 0; i < 5; i++) {
+      const response = await client.messages.create({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1024,
+        system,
+        tools: DEVI_TOOLS,
+        messages: convo,
+      });
+      text += response.content.filter((b) => b.type === "text").map((b) => b.text).join("");
+      const toolUses = response.content.filter((b) => b.type === "tool_use");
+      if (!toolUses.length) break;
+      const results = [];
+      for (const tu of toolUses) {
+        const { result, action } = await executeTool(tu.name, tu.input || {});
+        if (action) actions.push(action);
+        results.push({ type: "tool_result", tool_use_id: tu.id, content: JSON.stringify(result) });
+      }
+      convo = [...convo, { role: "assistant", content: response.content }, { role: "user", content: results }];
+    }
+    return NextResponse.json({ content: text.trim() || fallback(lastUser), actions, mode: "live" });
   } catch (err) {
     console.error("Devi API error:", err);
-    return NextResponse.json({ content: fallback(lastUser), mode: "fallback" });
+    const actions = await routeActions(lastUser, lang);
+    return NextResponse.json({ content: fallback(lastUser), actions, mode: "fallback" });
   }
 }
