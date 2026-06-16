@@ -17,6 +17,9 @@ export default function PlayerControls({ song, artist, lang, isPlaying, progress
       <div className="now-label">Now playing · {lang}</div>
       <div className="playing-title" aria-live="polite">{song ? song.title : "Select a song"}</div>
       <div className="playing-meta">{artist ? `${artist.icon} ${artist.name}` : "—"}{song ? ` · ${song.deity} · ${song.mood}` : ""}</div>
+      {song?.yt && (
+        <a className="yt-link" href={`https://www.youtube.com/watch?v=${song.yt}`} target="_blank" rel="noopener noreferrer">▶ Real audio · Watch on YouTube ↗</a>
+      )}
 
       <div className="progress-track" onClick={seek} role="slider" aria-label="Seek" aria-valuenow={Math.round(pct)} aria-valuemin={0} aria-valuemax={100} tabIndex={0}>
         <div className="progress-bar" style={{ width: `${pct}%` }} />

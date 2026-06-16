@@ -8,7 +8,7 @@ export default function SongList({ songs, currentIdx, isPlaying, onSelect }) {
           return (
             <button key={s.id} className={`song-item ${active ? "active" : ""}`} onClick={() => onSelect(i)}>
               {active && isPlaying ? <span className="now-playing-dot" aria-label="Now playing" /> : <span className="song-num">{i + 1}</span>}
-              <span className="song-title">{s.title}</span>
+              <span className="song-title">{s.title}{s.yt && <span className="song-real" title="Real audio (YouTube)"> ♪</span>}</span>
               <span className="song-duration">{s.dur}</span>
             </button>
           );
