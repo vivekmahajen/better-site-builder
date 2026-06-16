@@ -14,6 +14,7 @@ export default function Footer() {
             <Link href="/pujas">Book a Puja</Link>
             <Link href="/live-darshan">Live Darshan</Link>
             <Link href="/astrology">Astrology</Link>
+            <Link href="/dosha-nivaran">Dosha Nivaran</Link>
             <Link href="/daily">Daily Aarti & Panchang</Link>
             <Link href="/track-order">Track Order</Link>
           </div>

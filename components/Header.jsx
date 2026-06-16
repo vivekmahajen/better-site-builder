@@ -7,6 +7,7 @@ const NAV = [
   { href: "/pujas", label: "Pujas" },
   { href: "/live-darshan", label: "Live Darshan" },
   { href: "/astrology", label: "Astrology" },
+  { href: "/dosha-nivaran", label: "Dosha Nivaran" },
   { href: "/daily", label: "Daily" },
   { href: "/track-order", label: "Track Order" },
 ];
