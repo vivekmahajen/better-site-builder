@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { computeChart, getTodayPanchang, buildFallbackReading } from "@/lib/jyotish";
 import { resolvePujaSlug, getPuja } from "@/lib/catalog";
+import { geocodePlace, zonedWallTimeToUtc } from "@/lib/geocode";
 
 // Attach a bookable puja (slug/name/price) to each recommendation when one matches.
 function withBooking(reading) {
@@ -91,9 +92,23 @@ export async function POST(req) {
     return NextResponse.json({ error: "missing_fields", message: "Name, date of birth and place of birth are required." }, { status: 400 });
   }
 
+  // Geocode the birth place → coordinates + timezone (needed for an accurate Lagna).
+  const geo = await geocodePlace(pob);
+  if (!geo) {
+    return NextResponse.json(
+      { error: "geocode_failed", message: `Couldn't locate "${pob}". Try "City, Country" — e.g. "Pune, India".` },
+      { status: 422 },
+    );
+  }
+
   let chart;
   try {
-    chart = computeChart(body);
+    const dobDate = new Date(dob); // YYYY-MM-DD
+    const [y, mo, d] = [dobDate.getUTCFullYear(), dobDate.getUTCMonth() + 1, dobDate.getUTCDate()];
+    const timeKnown = !!(body.tob && /^\d{1,2}:\d{2}$/.test(body.tob));
+    const [hh, mi] = (timeKnown ? body.tob : "12:00").split(":").map(Number);
+    const dateUtc = zonedWallTimeToUtc(y, mo, d, hh, mi, geo.timezone);
+    chart = computeChart({ ...body, dateUtc, lat: geo.lat, lon: geo.lon, placeLabel: geo.label, timezone: geo.timezone, timeKnown });
   } catch (err) {
     console.error("chart computation failed:", err);
     return NextResponse.json({ error: "chart_error" }, { status: 400 });

@@ -165,6 +165,10 @@ export default function PujaCalculator() {
               <div className="pc-sub">🌙 {chart.moonSign} &nbsp;·&nbsp; ⬆️ {chart.lagna} &nbsp;·&nbsp; ✨ {chart.nakshatra}</div>
             </div>
           </div>
+          {chart.place && <div className="pc-place">📍 {chart.place}{chart.timezone ? ` · ${chart.timezone}` : ""}</div>}
+          {chart.timeKnown === false && (
+            <div className="pc-warn">⚠️ No birth time entered — the Lagna and house placements assume noon and may be off. Add your exact time of birth for an accurate chart.</div>
+          )}
           <p className="pc-cosmic">{reading.cosmic_profile}</p>
           <div className="pc-planets">
             {Object.entries(chart.planets).map(([p, v]) => (
@@ -233,10 +237,8 @@ export default function PujaCalculator() {
         </div>
 
         <p className="pc-disclaimer">
-          {source === "fallback"
-            ? "This reading uses Aastha's rule-based Jyotish engine. "
-            : "This reading was personalised by Claude AI interpreting your chart. "}
-          It is spiritual guidance and inspiration — not a substitute for consultation with a qualified Jyotishi. Planetary positions are approximate; a precise reading requires professional ephemeris software.
+          Planetary positions are computed with a real ephemeris (astronomy-engine) using Lahiri sidereal positions and whole-sign houses; the Lagna is derived from your geocoded birth place and exact time. {source === "fallback" ? "The prescription uses Aastha's rule-based Jyotish engine. " : "The prescription was personalised by Claude AI interpreting your chart. "}
+          It is spiritual guidance — not a substitute for a qualified Jyotishi. Accuracy depends on the precision of your birth time and place.
         </p>
         <div style={{ textAlign: "center", marginTop: 18 }}>
           <button className="btn btn-ghost" onClick={reset}>← Calculate for another person</button>
@@ -255,7 +257,7 @@ export default function PujaCalculator() {
         <div className="pc-grid">
           <div className="field full"><label>Your full name *</label><input value={form.name} onChange={set("name")} placeholder="Enter your name" /></div>
           <div className="field"><label>Date of birth *</label><input type="date" value={form.dob} onChange={set("dob")} max="2018-01-01" /></div>
-          <div className="field"><label>Time of birth</label><input type="time" value={form.tob} onChange={set("tob")} /></div>
+          <div className="field"><label>Time of birth <span style={{ color: "var(--saffron-dark)" }}>(for accurate Lagna)</span></label><input type="time" value={form.tob} onChange={set("tob")} /></div>
           <div className="field full"><label>Place of birth (city, country) *</label><input value={form.pob} onChange={set("pob")} placeholder="e.g. Mumbai, India" /></div>
           <div className="field">
             <label>Primary life concern</label>
