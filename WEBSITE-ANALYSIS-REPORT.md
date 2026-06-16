@@ -162,3 +162,23 @@ Site anti-bot blocked (403); assessed from public listings/search.
 | Free transit-aware puja calculator | ✅ | ❌ | Aastha leads |
 
 **Built this round:** multi-name sankalp (family & friends on a single booking, persisted + shown in the sankalp step) and Temple Daan (`/daan`). Deferred: live telecast of own seva, devotional feed, festive-seva grouping.
+
+---
+
+## Reference addendum — DevPunya (devpunya.com) · added 2026-06-16
+
+Site anti-bot blocked (403); assessed from public listings/app-store.
+
+**DevPunya positioning:** online puja & chadhawa at 100+ temples with experienced Vedic priests, video + certificate, prasad delivery, astrology & dosha remedies.
+
+| Feature | Aastha | DevPunya | Action |
+|---|---|---|---|
+| À-la-carte chadhava offerings (tulsi, sindoor, oil, ladoo, chunri, saree…) | ❌ → ✅ added | ✅ | **BUILT** — offering picker with running total on the booking |
+| Certificate of completion | ❌ → ✅ added | ✅ | **BUILT** — `/certificate/[id]`, printable, linked from tracking |
+| Puja video | ✅ 48-hr HD | ✅ | parity |
+| Festival / monthly rituals (Masik Shivratri) | ⚠️ subscriptions + transit dropdown | ✅ | partial — deferred (festive grouping) |
+| Per-stage live order tracking | ✅ | ❌ | Aastha leads |
+| Transparent all-inclusive pricing | ✅ | ⚠️ | Aastha leads |
+| Free transit-aware puja calculator | ✅ | ❌ | Aastha leads |
+
+**Built this round:** à-la-carte chadhava offerings (added to a booking, priced, recorded) and a printable puja completion certificate per order. Deferred: festive/monthly ritual grouping.

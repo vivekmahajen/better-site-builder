@@ -19,7 +19,7 @@ export async function POST(req) {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
 
-  const { slug, devotee, gotra, family } = body || {};
+  const { slug, devotee, gotra, family, offerings } = body || {};
   const puja = slug ? getPuja(slug) : null;
   if (!puja) return NextResponse.json({ error: "unknown_puja" }, { status: 400 });
   if (!devotee || !String(devotee).trim()) {
@@ -33,6 +33,7 @@ export async function POST(req) {
       devotee: String(devotee).trim(),
       gotra: gotra ? String(gotra).trim() : null,
       family: family ? String(family).trim().slice(0, 500) : null,
+      offerings: offerings ? String(offerings).trim().slice(0, 300) : null,
       priest: `${puja.priest} (Verified ✓, ${puja.priestYears} yrs)`,
     });
     return NextResponse.json({ id: order.id, order }, { status: 201 });

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { toast } from "@/lib/toast";
+import { CHADHAVA_OFFERINGS } from "@/lib/catalog";
 
 function Check() {
   return (
@@ -101,8 +102,13 @@ function BookingModal({ puja, onClose }) {
   const [devotee, setDevotee] = useState("");
   const [gotra, setGotra] = useState("");
   const [family, setFamily] = useState("");
+  const [picked, setPicked] = useState([]); // chadhava offering ids
   const [submitting, setSubmitting] = useState(false);
   const [order, setOrder] = useState(null);
+
+  const toggle = (id) => setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+  const chosen = CHADHAVA_OFFERINGS.filter((o) => picked.includes(o.id));
+  const total = puja.price + chosen.reduce((s, o) => s + o.price, 0);
 
   async function submit(e) {
     e.preventDefault();
@@ -112,7 +118,7 @@ function BookingModal({ puja, onClose }) {
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: puja.slug, devotee, gotra, family }),
+        body: JSON.stringify({ slug: puja.slug, devotee, gotra, family, offerings: chosen.map((o) => o.name).join(", ") }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "failed");
@@ -150,9 +156,19 @@ function BookingModal({ puja, onClose }) {
                 <label htmlFor="family">Include family & friends (optional)</label>
                 <input id="family" value={family} onChange={(e) => setFamily(e.target.value)} placeholder="e.g. Anil, Priya, Rohan — names chanted in the sankalp" />
               </div>
+              <div className="field">
+                <label>Add chadhava offerings (optional)</label>
+                <div className="offer-chips">
+                  {CHADHAVA_OFFERINGS.map((o) => (
+                    <button type="button" key={o.id} className={`offer-chip ${picked.includes(o.id) ? "active" : ""}`} onClick={() => toggle(o.id)}>
+                      <span>{o.icon} {o.name}</span><span className="offer-price">+₹{o.price}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
               <div className="price-line">
-                <span style={{ color: "var(--ink-soft)" }}>All-inclusive total</span>
-                <span className="price">₹{puja.price.toLocaleString("en-IN")}</span>
+                <span style={{ color: "var(--ink-soft)" }}>{chosen.length ? `Puja + ${chosen.length} offering${chosen.length > 1 ? "s" : ""}` : "All-inclusive total"}</span>
+                <span className="price">₹{total.toLocaleString("en-IN")}</span>
               </div>
               <button className="btn btn-primary btn-block" disabled={submitting}>
                 {submitting ? "Confirming…" : "Confirm & pay (demo)"}
