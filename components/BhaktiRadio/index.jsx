@@ -6,6 +6,7 @@ import ArtistCarousel from "./ArtistCarousel";
 import SongList from "./SongList";
 import PlayerControls from "./PlayerControls";
 import AudioVisualizer from "./AudioVisualizer";
+import YouTubeAudio from "./YouTubeAudio";
 import { BHAKTI_CATALOG } from "@/lib/radio/catalog";
 import { TonePlayer, freqForId } from "@/lib/radio/tonePlayer";
 
@@ -34,8 +35,11 @@ export default function BhaktiRadio() {
   const moods = useMemo(() => ["All", ...Array.from(new Set((artist?.songs || []).map((s) => s.mood)))], [artist]);
   const songs = useMemo(() => (mood === "All" ? artist?.songs || [] : (artist?.songs || []).filter((s) => s.mood === mood)), [artist, mood]);
   const song = songs[songIdx];
+  const usingYT = Boolean(song?.yt); // real audio via YouTube when an ID exists
+  const ytRef = useRef(null);
+  const onYtProgress = useCallback((c, t) => setProgress({ current: c || 0, total: t || 0 }), []);
 
-  // Ambient Web-Audio drone so playback is genuinely audible (no licensed files).
+  // Ambient Web-Audio drone for songs WITHOUT a YouTube source (so it's audible).
   const toneRef = useRef(null);
   useEffect(() => {
     toneRef.current = new TonePlayer();
@@ -44,13 +48,13 @@ export default function BhaktiRadio() {
   useEffect(() => {
     const tp = toneRef.current;
     if (!tp) return;
-    if (isPlaying && song) tp.start(freqForId(song.id), isMuted ? 0 : volume);
+    if (isPlaying && song && !usingYT) tp.start(freqForId(song.id), isMuted ? 0 : volume);
     else tp.stop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying, song?.id]);
+  }, [isPlaying, song?.id, usingYT]);
   useEffect(() => {
-    toneRef.current?.setVolume(isMuted ? 0 : volume);
-  }, [volume, isMuted]);
+    if (!usingYT) toneRef.current?.setVolume(isMuted ? 0 : volume);
+  }, [volume, isMuted, usingYT]);
 
   const playSong = useCallback((i) => {
     const s = songs[i];
@@ -73,17 +77,17 @@ export default function BhaktiRadio() {
     setIsPlaying((v) => !v);
   };
 
-  // Simulated playback clock.
+  // Simulated playback clock (only for non-YouTube / tone tracks).
   useEffect(() => {
-    if (!isPlaying || progress.total === 0) return undefined;
+    if (!isPlaying || usingYT || progress.total === 0) return undefined;
     const id = setInterval(() => setProgress((p) => ({ ...p, current: Math.min(p.current + 1, p.total) })), 1000);
     return () => clearInterval(id);
   }, [isPlaying, progress.total]);
 
   // Auto-advance when a track finishes.
   useEffect(() => {
-    if (isPlaying && progress.total > 0 && progress.current >= progress.total) handleNext();
-  }, [progress, isPlaying, handleNext]);
+    if (!usingYT && isPlaying && progress.total > 0 && progress.current >= progress.total) handleNext();
+  }, [progress, isPlaying, handleNext, usingYT]);
 
   const reset = (fn) => { setIsPlaying(false); setSongIdx(0); setProgress({ current: 0, total: 0 }); fn(); };
 
@@ -113,12 +117,15 @@ export default function BhaktiRadio() {
           song={song} artist={artist} lang={lang}
           isPlaying={isPlaying} progress={progress} volume={volume} isMuted={isMuted}
           onTogglePlay={togglePlay} onNext={handleNext} onPrev={handlePrev}
-          onSeek={(pct) => setProgress((p) => ({ ...p, current: (pct / 100) * p.total }))}
+          onSeek={(pct) => { if (usingYT) ytRef.current?.seekTo((pct / 100) * (progress.total || 0)); else setProgress((p) => ({ ...p, current: (pct / 100) * p.total })); }}
           onVolumeChange={(v) => { setVolume(v); setIsMuted(v === 0); }}
           onToggleMute={() => setIsMuted((v) => !v)}
         />
         <AudioVisualizer isPlaying={isPlaying} color={color} />
-        <p className="radio-note">Plays a live ambient drone (tanpura-style, synthesised). Connect a music CDN or licensed stream for the full bhajan recordings.</p>
+        {usingYT && (
+          <YouTubeAudio key={song.yt} ref={ytRef} videoId={song.yt} isPlaying={isPlaying} volume={volume} isMuted={isMuted} onProgress={onYtProgress} onEnded={handleNext} />
+        )}
+        <p className="radio-note">▶ Songs marked with a play dot stream the real recording via YouTube; others use a synthesised ambient tone. Connect a licensed CDN for full inline audio.</p>
       </div>
     </div>
   );

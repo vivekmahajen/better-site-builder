@@ -807,3 +807,6 @@ html[dir="rtl"] body { line-height: 1.9; }
 .radio-note { text-align: center; font-size: 11px; color: rgba(253,246,231,.35); margin-top: 16px; }
 @media (max-width: 480px) { .lang-grid { grid-template-columns: repeat(2, 1fr); } .radio-content { padding: 16px; } }
 @media (prefers-reduced-motion: reduce) { .diya-lamp, .radio-om, .now-playing-dot, .viz-bar.playing { animation: none !important; } }
+.yt-link { display: inline-block; font-size: 12px; color: #F5C842; text-decoration: none; margin: -8px 0 14px; }
+.yt-link:hover { text-decoration: underline; }
+.song-real { color: #F5C842; font-size: 12px; }
