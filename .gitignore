@@ -1,0 +1,7 @@
+node_modules/
+.next/
+*.log
+
+# Local env (never commit secrets)
+.env
+.env*.local
