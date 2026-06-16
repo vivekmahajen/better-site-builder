@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PUJAS, CATEGORIES, GOALS } from "@/lib/catalog";
 import PujaBrowser from "@/components/PujaBrowser";
+import PageHero from "@/components/PageHero";
 
 export const metadata = {
   title: "Book a Puja & Chadhava — Verified priests, all-inclusive pricing | Aastha",
@@ -10,13 +11,7 @@ export const metadata = {
 export default function PujasPage() {
   return (
     <>
-      <section className="page-hero">
-        <div className="wrap">
-          <div className="breadcrumb"><Link href="/">Home</Link> / Pujas</div>
-          <h1>Book a Puja & Chadhava</h1>
-          <p>Performed in your name & gotra by verified Vedic priests at India's most revered temples. Every price is all-inclusive — see exactly what you get.</p>
-        </div>
-      </section>
+      <PageHero crumbKey="nav.pujas" titleKey="pujas_page.title" introKey="pujas_page.intro" />
 
       <section>
         <div className="wrap">

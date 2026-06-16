@@ -1,5 +1,5 @@
-import Link from "next/link";
 import PujaCalculator from "@/components/PujaCalculator";
+import PageHero from "@/components/PageHero";
 
 export const metadata = {
   title: "Puja Calculator — Your personal Vedic ritual prescription | Aastha",
@@ -10,13 +10,7 @@ export const metadata = {
 export default function PujaCalculatorPage() {
   return (
     <>
-      <section className="page-hero">
-        <div className="wrap">
-          <div className="breadcrumb"><Link href="/">Home</Link> / Puja Calculator</div>
-          <h1>🙏 Puja Calculator</h1>
-          <p>Enter your birth details and receive a personalised Vedic puja prescription — based on your Kundali, planetary doshas, current Dasha, and today's Panchang.</p>
-        </div>
-      </section>
+      <PageHero crumbKey="nav.puja_calculator" titleKey="calc_page.title" introKey="calc_page.intro" />
 
       <section>
         <div className="wrap" style={{ maxWidth: 920 }}>
