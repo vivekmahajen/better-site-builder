@@ -4,29 +4,20 @@ import DeviAvatar from "./DeviAvatar";
 import ChatMessage from "./ChatMessage";
 import TypingIndicator from "./TypingIndicator";
 import QuickReplies from "./QuickReplies";
-
-const QUICK_REPLIES = [
-  { label: "🪔 Book a puja", value: "I want to book a puja" },
-  { label: "🔮 Puja Calculator", value: "How does the free puja calculator work?" },
-  { label: "📺 Live Darshan", value: "When is the next live darshan?" },
-  { label: "🪐 I have a dosha", value: "I think I have a dosha. Can you help?" },
-  { label: "📦 Track my order", value: "I want to track my puja order" },
-  { label: "⭐ Astrology", value: "I want to book an astrology consultation" },
-];
-
-const WELCOME_MESSAGE = {
-  role: "assistant",
-  content: `Jai Shri Ram! 🙏 Namaste ji, I am **Devi** — your sacred guide here at Aastha, Bridge to the Divine.
-
-Whether you seek a puja for peace, prosperity, or healing — or simply want to understand which ritual aligns with your stars — I am here to guide you with love.
-
-*"Sarve bhavantu sukhinah" — May all beings be happy.* 🌸
-
-Tell me, what brings you to our divine platform today?`,
-  timestamp: new Date(),
-};
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function DeviChatbot() {
+  const { t, lang } = useLanguage();
+  const QUICK_REPLIES = [
+    { label: t("devi.quick_replies.book_puja"), value: "I want to book a puja" },
+    { label: t("devi.quick_replies.calculator"), value: "How does the free puja calculator work?" },
+    { label: t("devi.quick_replies.darshan"), value: "When is the next live darshan?" },
+    { label: t("devi.quick_replies.dosha"), value: "I think I have a dosha. Can you help?" },
+    { label: t("devi.quick_replies.track"), value: "I want to track my puja order" },
+    { label: t("devi.quick_replies.astrology"), value: "I want to book an astrology consultation" },
+  ];
+  const WELCOME_MESSAGE = { role: "assistant", content: t("devi.greeting_first"), timestamp: new Date() };
+
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
@@ -58,6 +49,7 @@ export default function DeviChatbot() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          lang,
           messages: next.map((m) => ({ role: m.role, content: m.content })),
         }),
       });
@@ -91,8 +83,8 @@ export default function DeviChatbot() {
       >
         <DeviAvatar size="trigger" />
         <span className="devi-trigger-label">
-          <span className="devi-trigger-name">Devi</span>
-          <span className="devi-trigger-sub">Your Sacred Guide</span>
+          <span className="devi-trigger-name">{t("devi.name")}</span>
+          <span className="devi-trigger-sub">{t("devi.title")}</span>
         </span>
         <span className="devi-pulse" aria-hidden />
       </button>
@@ -102,10 +94,10 @@ export default function DeviChatbot() {
           <div className="devi-header">
             <DeviAvatar size="header" />
             <div className="devi-header-info">
-              <div className="devi-header-name">Devi</div>
+              <div className="devi-header-name">{t("devi.name")}</div>
               <div className="devi-header-status">
                 <span className="devi-online-dot" aria-hidden />
-                Your Sacred Guide • Online
+                {t("devi.title")} • Online
               </div>
             </div>
             <button className="devi-close" onClick={() => setIsOpen(false)} aria-label="Close chat">✕</button>
@@ -126,7 +118,7 @@ export default function DeviChatbot() {
             <textarea
               ref={inputRef}
               className="devi-input"
-              placeholder="Ask Devi anything... 🙏"
+              placeholder={t("devi.placeholder")}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKey}

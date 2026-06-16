@@ -1,0 +1,18 @@
+{
+  "devi": {
+    "name": "Devi",
+    "title": "Your Sacred Guide",
+    "greeting_first": "Jai Shri Ram! 🙏 Namaste ji, I am **Devi** — your sacred guide here at Aastha, Bridge to the Divine.\n\nWhether you seek a puja for peace, prosperity, or healing — or simply want to understand which ritual aligns with your stars — I am here to guide you with love.\n\n*\"Sarve bhavantu sukhinah\" — May all beings be happy.* 🌸\n\nTell me, what brings you to our divine platform today?",
+    "placeholder": "Ask Devi anything... 🙏",
+    "thinking": "One moment ji... 🙏",
+    "error": "Ji, ek second — I seem to have a small connection issue. Please try again in a moment. 🙏",
+    "quick_replies": {
+      "book_puja": "🪔 Book a puja",
+      "calculator": "🔮 Puja Calculator",
+      "dosha": "🪐 I have a dosha",
+      "track": "📦 Track my order",
+      "darshan": "📺 Live Darshan",
+      "astrology": "⭐ Astrology"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "nav": {
+    "pujas": "Pujas",
+    "live_darshan": "Live Darshan",
+    "astrology": "Astrology",
+    "dosha_nivaran": "Dosha Nivaran",
+    "puja_calculator": "Puja Calculator",
+    "daan": "Daan",
+    "daily": "Daily",
+    "track_order": "Track Order",
+    "book_puja": "Book a puja",
+    "track_my_puja": "Track my puja"
+  },
+  "hero": {
+    "tagline": "Bridge to the divine"
+  },
+  "footer": {
+    "blurb": "Bringing the temple home with verified priests, live tracking and total transparency. Devotion you can trust — and see.",
+    "explore": "Explore",
+    "trust": "Trust",
+    "support": "Support",
+    "made": "Made with devotion 🙏"
+  },
+  "language_selector": {
+    "choose_language": "Choose language",
+    "coming_soon": "More languages coming soon"
+  }
+}

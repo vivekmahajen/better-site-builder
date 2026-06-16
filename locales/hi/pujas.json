@@ -1,0 +1,12 @@
+{
+  "details": { "duration": "अवधि", "price": "मूल्य", "deity": "देवता", "benefits": "लाभ", "samagri": "सामग्री", "mantra": "मंत्र", "when_to_do": "कब करें" },
+  "booking": {
+    "select_date": "तिथि चुनें",
+    "enter_sankalp": "संकल्प दर्ज करें",
+    "your_name": "आपका नाम",
+    "your_gotra": "आपका गोत्र",
+    "devotee_names": "भक्तों के नाम",
+    "confirm_booking": "बुकिंग की पुष्टि करें",
+    "booking_success": "आपकी पूजा सफलतापूर्वक बुक हो गई! 🙏"
+  }
+}

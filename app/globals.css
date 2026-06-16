@@ -691,3 +691,29 @@ table.cmp tbody tr:nth-child(even) { background: var(--cream); }
   .devi-trigger, .devi-window, .devi-pulse, .devi-online-dot, .devi-dot { animation: none !important; }
   .devi-message { transition: none !important; }
 }
+
+/* ════════════ Language selector ════════════ */
+.lang-selector { position: relative; }
+.lang-selector-trigger { display: inline-flex; align-items: center; gap: 6px; background: var(--white); border: 1.5px solid var(--line); border-radius: var(--radius-sm); padding: 6px 10px; font-size: .82rem; font-family: inherit; color: var(--ink); cursor: pointer; transition: border-color .15s; }
+.lang-selector-trigger:hover { border-color: var(--saffron); }
+.lang-selector-native { font-weight: 600; }
+.lang-dropdown { position: absolute; top: calc(100% + 6px); right: 0; z-index: 200; width: 240px; max-height: 340px; overflow-y: auto; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-sm); box-shadow: 0 16px 40px rgba(91,15,15,.18); padding: 6px; }
+.lang-dropdown-item { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: none; border: none; border-radius: 8px; padding: 8px 10px; cursor: pointer; font-family: inherit; color: var(--ink); }
+.lang-dropdown-item:hover:not(:disabled) { background: var(--cream-2); }
+.lang-dropdown-item.active { background: var(--cream); }
+.lang-dropdown-item.soon { opacity: .5; cursor: not-allowed; }
+.ldi-native { font-weight: 600; }
+.ldi-english { font-size: .78rem; color: var(--ink-soft); }
+.ldi-check { margin-left: auto; color: var(--green); font-weight: 700; }
+.ldi-soon { margin-left: auto; font-size: .62rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); border: 1px solid var(--line); border-radius: 99px; padding: 1px 6px; }
+.lang-dropdown-note { font-size: .72rem; color: var(--ink-soft); padding: 8px 10px 4px; border-top: 1px dashed var(--line); margin-top: 4px; }
+
+/* ════════════ RTL support (Urdu/Kashmiri/Sindhi) ════════════ */
+html[dir="rtl"] .nav,
+html[dir="rtl"] .nav-cta,
+html[dir="rtl"] .foot-grid { flex-direction: row-reverse; }
+html[dir="rtl"] .lang-dropdown { right: auto; left: 0; }
+html[dir="rtl"] .devi-window,
+html[dir="rtl"] .devi-trigger { right: auto; left: 28px; }
+html[dir="rtl"] .devi-message.assistant { flex-direction: row-reverse; }
+html[dir="rtl"] body { line-height: 1.9; }

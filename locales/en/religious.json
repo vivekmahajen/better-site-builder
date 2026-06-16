@@ -1,0 +1,5 @@
+{
+  "deities": { "ganesh": "Shri Ganesh ji", "shiva": "Lord Shiva", "vishnu": "Lord Vishnu", "lakshmi": "Maa Lakshmi", "durga": "Maa Durga", "krishna": "Lord Shri Krishna", "rama": "Lord Shri Ram", "hanuman": "Shri Hanuman ji" },
+  "greetings": { "jai_shri_ram": "Jai Shri Ram! 🙏", "om_namah_shivay": "Om Namah Shivaya 🔱", "auspicious_msg": "May God fulfil all your wishes 🙏" },
+  "panchang": { "tithi": "Tithi", "nakshatra": "Nakshatra", "sunrise": "Sunrise", "sunset": "Sunset", "rahu_kaal": "Rahu Kaal" }
+}
