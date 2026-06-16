@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
+import { relevantTransits, CAT_EMOJI, transitDates } from "@/lib/transits";
 
 const PLANET_ICONS = { Sun: "☀️", Moon: "🌙", Mars: "🔴", Mercury: "💚", Jupiter: "⭐", Venus: "💗", Saturn: "🪐", Rahu: "🐍", Ketu: "☄️" };
 const PLANET_COLORS = { Sun: "#E8710A", Moon: "#5b6bd6", Mars: "#d83434", Mercury: "#2e9e2e", Jupiter: "#D4A017", Venus: "#d6418c", Saturn: "#7a7a92", Rahu: "#9370DB", Ketu: "#CD853F" };
@@ -127,7 +128,10 @@ function BookingModal({ puja, defaultName, onClose }) {
 }
 
 export default function PujaCalculator() {
-  const [form, setForm] = useState({ name: "", dob: "", tob: "", pob: "", concern: "", gender: "male" });
+  const [form, setForm] = useState({ name: "", dob: "", tob: "", pob: "", concern: "", gender: "male", transitId: "" });
+  const transits = useMemo(() => relevantTransits(), []);
+  const activeT = transits.filter((t) => t.status === "active");
+  const upcomingT = transits.filter((t) => t.status === "upcoming");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
@@ -149,7 +153,7 @@ export default function PujaCalculator() {
     } finally { setLoading(false); }
   }
 
-  function reset() { setData(null); setForm({ name: "", dob: "", tob: "", pob: "", concern: "", gender: "male" }); window.scrollTo({ top: 0, behavior: "smooth" }); }
+  function reset() { setData(null); setForm({ name: "", dob: "", tob: "", pob: "", concern: "", gender: "male", transitId: "" }); window.scrollTo({ top: 0, behavior: "smooth" }); }
 
   if (data) {
     const { chart, dashas, panchang, reading, source } = data;
@@ -180,6 +184,22 @@ export default function PujaCalculator() {
             ))}
           </div>
         </div>
+
+        {/* CURRENT TRANSIT */}
+        {reading.transit && (
+          <div className="card pc-transit reveal in">
+            <div className="pc-transit-t">{CAT_EMOJI[reading.transit.category] || "🪐"} Factoring in: {reading.transit.name}</div>
+            <div className="pc-transit-dates">{reading.transit.dates}</div>
+            <p style={{ color: "var(--ink-soft)", margin: "8px 0" }}>{reading.transit.blurb}</p>
+            <p className="pc-transit-harness">✨ {reading.transit.harness}</p>
+            {reading.transit.bookSlug && (
+              <button className="btn btn-primary btn-sm" style={{ marginTop: 6 }}
+                onClick={() => setBooking({ bookSlug: reading.transit.bookSlug, bookName: reading.transit.bookName, bookPrice: reading.transit.bookPrice })}>
+                🪔 Book the remedy puja{reading.transit.bookPrice ? ` · ₹${reading.transit.bookPrice.toLocaleString("en-IN")}` : ""}
+              </button>
+            )}
+          </div>
+        )}
 
         {/* PANCHANG */}
         <div className="card pc-block reveal in">
@@ -270,6 +290,22 @@ export default function PujaCalculator() {
             <label>Gender</label>
             <select value={form.gender} onChange={set("gender")}>
               <option value="male">Male</option><option value="female">Female</option><option value="other">Other / Prefer not to say</option>
+            </select>
+          </div>
+          <div className="field full">
+            <label>Current planetary event to factor in <span style={{ color: "var(--ink-soft)" }}>(optional · live for today)</span></label>
+            <select value={form.transitId} onChange={set("transitId")}>
+              <option value="">None — just my birth chart</option>
+              {activeT.length > 0 && (
+                <optgroup label="🟢 Active now">
+                  {activeT.map((t) => <option key={t.id} value={t.id}>{CAT_EMOJI[t.category]} {t.name} · {transitDates(t)}</option>)}
+                </optgroup>
+              )}
+              {upcomingT.length > 0 && (
+                <optgroup label="🔜 Coming up">
+                  {upcomingT.map((t) => <option key={t.id} value={t.id}>{CAT_EMOJI[t.category]} {t.name} · {transitDates(t)}</option>)}
+                </optgroup>
+              )}
             </select>
           </div>
         </div>

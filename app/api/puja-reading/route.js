@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { computeChart, getTodayPanchang, buildFallbackReading } from "@/lib/jyotish";
 import { resolvePujaSlug, getPuja } from "@/lib/catalog";
 import { geocodePlace, zonedWallTimeToUtc } from "@/lib/geocode";
+import { getTransit, transitDates } from "@/lib/transits";
 
 // Attach a bookable puja (slug/name/price) to each recommendation when one matches.
 function withBooking(reading) {
@@ -47,9 +48,13 @@ const READING_SCHEMA = {
   required: ["cosmic_profile", "pujas", "daily_sadhana", "golden_muhurta", "jyotish_insight"],
 };
 
-async function aiReading(chart) {
+async function aiReading(chart, transit) {
   const { default: Anthropic } = await import("@anthropic-ai/sdk");
   const client = new Anthropic(); // reads ANTHROPIC_API_KEY from env
+
+  const transitBlock = transit
+    ? `\nCURRENT PLANETARY EVENT TO FACTOR IN: ${transit.name} (${transitDates(transit)}).\n${transit.blurb}\nWeave this transit into the cosmic_profile and prioritise at least one puja that helps the person harness or remedy it.\n`
+    : "";
 
   const prompt = `You are a senior Vedic astrologer (Jyotishi) with 30 years of experience. Analyse this birth chart and produce a personalised puja prescription.
 
@@ -69,7 +74,7 @@ IDENTIFIED DOSHAS
 ${chart.doshas.map((d) => `- ${d.name}: ${d.reason}`).join("\n") || "None from this simplified analysis"}
 
 CURRENT MAHADASHA: ${chart.activeDasha}
-
+${transitBlock}
 Provide: a 2-3 sentence cosmic_profile; the top 5 pujas in priority order, each grounded in THIS chart's actual house placements, doshas and dasha (name, deity, priority of critical|high|medium|daily, why_for_you, the key mantra, timing/day, one key_samagri item, primary_benefit); a daily_sadhana; a golden_muhurta for this week; and one profound jyotish_insight. Be specific to this chart — reference actual placements, not generic advice.`;
 
   const res = await client.messages.create({
@@ -114,20 +119,34 @@ export async function POST(req) {
     return NextResponse.json({ error: "chart_error" }, { status: 400 });
   }
 
+  const transit = body.transitId ? getTransit(body.transitId) : null;
+
   let reading;
   let source = "ai";
   if (process.env.ANTHROPIC_API_KEY) {
     try {
-      reading = await aiReading(chart);
+      reading = await aiReading(chart, transit);
     } catch (err) {
       console.error("AI reading failed, using rule-based fallback:", err?.message || err);
-      reading = buildFallbackReading(chart);
+      reading = buildFallbackReading(chart, transit);
       source = "fallback";
     }
   } else {
-    reading = buildFallbackReading(chart);
+    reading = buildFallbackReading(chart, transit);
     source = "fallback";
   }
 
-  return NextResponse.json({ chart, dashas: chart.dashas, panchang: getTodayPanchang(), reading: withBooking(reading), source });
+  reading = withBooking(reading);
+
+  // Attach the selected transit as contextual cosmic weather + a bookable remedy.
+  if (transit) {
+    const rp = getPuja(transit.remedy);
+    reading.transit = {
+      id: transit.id, name: transit.name, category: transit.category,
+      dates: transitDates(transit), blurb: transit.blurb, harness: transit.harness,
+      ...(rp ? { bookSlug: transit.remedy, bookName: rp.name, bookPrice: rp.price } : {}),
+    };
+  }
+
+  return NextResponse.json({ chart, dashas: chart.dashas, panchang: getTodayPanchang(), reading, source });
 }
