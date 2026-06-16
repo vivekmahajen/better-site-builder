@@ -372,3 +372,41 @@ table.cmp tbody tr:nth-child(even) { background: var(--cream); }
 .state-live .dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; }
 .state-card h3 { color: var(--maroon); font-size: 1.1rem; }
 .state-card .sc-meta { font-size: .86rem; color: var(--ink-soft); margin: 4px 0 16px; flex: 1; }
+
+/* ---------- Rich puja cards (Sacred Pujas of India) ---------- */
+.pj-card { display: flex; flex-direction: column; padding: 20px 20px 18px; }
+.pj-head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 12px; }
+.pj-emoji { font-size: 2rem; width: 56px; height: 56px; flex: 0 0 auto; display: grid; place-items: center; background: var(--cream-2); border: 1px solid var(--line); border-radius: 14px; }
+.pj-titles { min-width: 0; }
+.pj-san { font-size: .82rem; color: var(--ink-soft); }
+.pj-card h3 { font-size: 1.12rem; color: var(--maroon); line-height: 1.2; margin: 2px 0; }
+.pj-deity { font-size: .8rem; color: var(--saffron-dark); font-weight: 600; }
+.pj-typerow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.pj-type { font-size: .68rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--blue); background: #e8f0f7; padding: 3px 9px; border-radius: 999px; }
+.pj-region { font-size: .76rem; color: var(--ink-soft); }
+.pj-desc { font-size: .92rem; color: var(--ink-soft); margin-bottom: 12px;
+  display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.pj-when { background: var(--cream); border-left: 3px solid var(--saffron); border-radius: 0 8px 8px 0; padding: 8px 12px; font-size: .82rem; color: var(--ink-soft); margin-bottom: 12px;
+  display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.pj-when-l { display: block; font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--saffron-dark); font-weight: 700; margin-bottom: 2px; }
+.pj-benefits { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.pj-benefit { font-size: .74rem; background: var(--green-soft); color: var(--green); border-radius: 999px; padding: 3px 9px; display: inline-flex; align-items: center; gap: 4px; }
+.pj-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+.pj-actions { display: flex; gap: 8px; }
+
+/* Puja details modal */
+.pj-modal { max-width: 640px; }
+.pj-modal-body { max-height: 70vh; overflow-y: auto; }
+.pj-sec-l { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--saffron-dark); font-weight: 700; margin: 18px 0 6px; }
+.pj-sec-l:first-child { margin-top: 0; }
+.pj-sec-p { font-size: .94rem; color: var(--ink); line-height: 1.7; }
+.pj-panch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.pj-panch { background: var(--cream-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+.pj-panch-l { font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 2px; }
+.pj-panch-v { font-size: .86rem; color: var(--maroon); font-weight: 600; }
+.pj-ben-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.pj-ben { display: flex; gap: 8px; background: var(--cream); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+.pj-ben-i { font-size: 1.2rem; flex: 0 0 auto; }
+.pj-ben-t { font-size: .86rem; font-weight: 700; color: var(--ink); }
+.pj-ben-d { font-size: .78rem; color: var(--ink-soft); }
+@media (max-width: 560px) { .pj-panch-grid, .pj-ben-grid { grid-template-columns: 1fr; } }
