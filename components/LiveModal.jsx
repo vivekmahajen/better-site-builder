@@ -13,12 +13,17 @@ export default function LiveModal({ item, onClose }) {
   if (!item) return null;
 
   const channel = item.channel || LIVE_FALLBACK_CHANNEL;
-  // Every channel exposes an "uploads" playlist whose id is the channel id with
-  // the leading "UC" swapped for "UU". Embedding that always has playable content
-  // (the channel's latest darshan/aarti videos) — unlike live_stream?channel=,
-  // which YouTube now returns as "unavailable" whenever nothing is live right now.
-  const uploads = channel.startsWith("UC") ? "UU" + channel.slice(2) : channel;
-  const src = `https://www.youtube.com/embed/videoseries?list=${uploads}&autoplay=1&mute=1&rel=0`;
+  // Prefer a pinned video id (a specific live stream) when provided — most reliable.
+  // Otherwise fall back to the channel's "uploads" playlist (UC -> UU), which always
+  // has playable content, unlike live_stream?channel= (often "unavailable").
+  const src = item.videoId
+    ? `https://www.youtube.com/embed/${item.videoId}?autoplay=1&mute=1&rel=0`
+    : `https://www.youtube.com/embed/videoseries?list=${
+        channel.startsWith("UC") ? "UU" + channel.slice(2) : channel
+      }&autoplay=1&mute=1&rel=0`;
+  const ytLink = item.videoId
+    ? `https://www.youtube.com/watch?v=${item.videoId}`
+    : `https://www.youtube.com/channel/${channel}/live`;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -41,10 +46,9 @@ export default function LiveModal({ item, onClose }) {
         </div>
         <div className="modal-body" style={{ paddingTop: 14 }}>
           <p style={{ fontSize: ".84rem", color: "var(--ink-soft)", margin: 0 }}>
-            Playing darshan & aarti from the temple's official channel. For the live broadcast when
-            it's on air,{" "}
-            <a href={`https://www.youtube.com/channel/${channel}/live`} target="_blank" rel="noopener noreferrer" style={{ color: "var(--saffron-dark)", fontWeight: 700 }}>
-              open the live stream on YouTube ↗
+            Streaming the temple's live darshan. Trouble playing here?{" "}
+            <a href={ytLink} target="_blank" rel="noopener noreferrer" style={{ color: "var(--saffron-dark)", fontWeight: 700 }}>
+              open it on YouTube ↗
             </a>
           </p>
         </div>
