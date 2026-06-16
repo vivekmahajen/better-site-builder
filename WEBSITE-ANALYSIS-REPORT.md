@@ -203,3 +203,27 @@ Site anti-bot blocked (403); assessed from public listings.
 | Free transit-aware puja calculator | ✅ | ❌ | Aastha leads |
 
 **Conclusion:** MandirVandana surfaces **no major new gap** — Aastha already matches or leads. The one distinctive nuance (personalised sankalp & offering clips) is now an explicit deliverable in Aastha's "what's included" and the order timeline. No new pages/features required.
+
+---
+
+## Reference addendum — Kashi Archan (kashiarchan.com) · added 2026-06-16
+
+Site assessed from public listings/app-store.
+
+**Kashi Archan positioning:** Kashi (Varanasi) seva foundation — online & offline darshan, puja, seva, sadhana, **jyotisha & tantra**, chadhava across temples, charitable causes (annadaan), multi-participant names & gotras, live puja from Kashi, and **browse personalized pujas by your need (health, wealth, relationships, spiritual)**.
+
+| Feature | Aastha | Kashi Archan | Action |
+|---|---|---|---|
+| Multi-participant names & gotras | ✅ | ✅ | parity (Aastha #16) |
+| Chadhava offerings | ✅ | ✅ | parity (Aastha #17) |
+| Charitable causes / annadaan | ✅ daan | ✅ | parity (Aastha #16) |
+| **Browse pujas by life goal / need** | ❌ → ✅ added | ✅ | **BUILT** — "Browse by need" filter on /pujas |
+| Jyotisha (astrology / calculator) | ✅ | ✅ | parity / Aastha leads |
+| Tantra / sadhana services | ⚠️ (dosha remedies) | ✅ | deferred (niche) |
+| Live puja from Kashi (your own puja, live) | ⚠️ live darshan + 48-hr video | ✅ | deferred (streaming infra) |
+| Offline / VIP darshan booking | ❌ | ✅ | out of web scope |
+| Per-stage live order tracking | ✅ | ❌ | Aastha leads |
+
+**Built this round:** "Browse by need" life-goal filter on the Pujas page (Health, Wealth, Marriage, Family, Education, Protection, Peace, Spiritual), with each puja auto-tagged from its benefits. Deferred: tantra/sadhana services, live telecast of your own puja, offline darshan.
+
+Also: homepage comparison table refreshed to include all features built this session (multi-name sankalp, chadhava à la carte, sankalp/offering clips, certificate, temple daan, browse-by-need).

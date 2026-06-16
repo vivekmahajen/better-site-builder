@@ -603,3 +603,7 @@ table.cmp tbody tr:nth-child(even) { background: var(--cream); }
   .cert-wrap { padding: 0; }
   .cert { box-shadow: none; }
 }
+
+/* ---------- "Browse by need" filter ---------- */
+.need-filter { text-align: center; margin-bottom: 14px; }
+.need-label { display: block; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--saffron-dark); font-weight: 700; margin-bottom: 8px; }
