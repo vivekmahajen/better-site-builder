@@ -194,14 +194,27 @@ function BookingModal({ puja, onClose }) {
   );
 }
 
-export default function PujaBrowser({ pujas, categories, showFilters = false }) {
+export default function PujaBrowser({ pujas, categories, goals, showFilters = false }) {
   const [active, setActive] = useState("All");
+  const [goal, setGoal] = useState("All");
   const [booking, setBooking] = useState(null);
   const [details, setDetails] = useState(null);
-  const shown = active === "All" ? pujas : pujas.filter((p) => p.category === active);
+  const shown = pujas.filter(
+    (p) => (active === "All" || p.category === active) && (goal === "All" || (p.goals || []).includes(goal)),
+  );
 
   return (
     <>
+      {showFilters && goals && (
+        <div className="need-filter">
+          <span className="need-label">Browse by need</span>
+          <div className="chips">
+            {goals.map((g) => (
+              <button key={g.id} className={`chip ${goal === g.id ? "active" : ""}`} onClick={() => setGoal(g.id)}>{g.label}</button>
+            ))}
+          </div>
+        </div>
+      )}
       {showFilters && categories && (
         <div className="chips">
           {categories.map((c) => (
@@ -211,6 +224,7 @@ export default function PujaBrowser({ pujas, categories, showFilters = false }) 
           ))}
         </div>
       )}
+      {shown.length === 0 && <p style={{ textAlign: "center", color: "var(--ink-soft)", margin: "10px 0 24px" }}>No pujas match that combination — try a different need or deity.</p>}
       <div className="grid grid-3">
         {shown.map((p) => (
           <PujaCard key={p.slug} p={p} onBook={setBooking} onDetails={setDetails} />

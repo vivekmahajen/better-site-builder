@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PUJAS, CATEGORIES } from "@/lib/catalog";
+import { PUJAS, CATEGORIES, GOALS } from "@/lib/catalog";
 import PujaBrowser from "@/components/PujaBrowser";
 
 export const metadata = {
@@ -20,7 +20,7 @@ export default function PujasPage() {
 
       <section>
         <div className="wrap">
-          <PujaBrowser pujas={PUJAS} categories={CATEGORIES} showFilters />
+          <PujaBrowser pujas={PUJAS} categories={CATEGORIES} goals={GOALS} showFilters />
         </div>
       </section>
 
