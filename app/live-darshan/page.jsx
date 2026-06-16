@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { LIVE } from "@/lib/catalog";
+import { LIVE, STATES } from "@/lib/catalog";
 import LiveGrid from "@/components/LiveGrid";
+import StateDarshan from "@/components/StateDarshan";
 
 export const metadata = {
   title: "Live Darshan — Watch aartis live from India's temples | Aastha",
@@ -19,10 +20,28 @@ export default function LiveDarshanPage() {
       </section>
 
       <section>
-        <div className="wrap"><LiveGrid items={LIVE} /></div>
+        <div className="wrap">
+          <div className="section-head reveal" style={{ marginBottom: 30 }}>
+            <span className="eyebrow">Streaming now</span>
+            <h2>Featured live darshan</h2>
+            <p>Official 24×7 darshan from major temples — plays right here in the app.</p>
+          </div>
+          <LiveGrid items={LIVE} />
+        </div>
       </section>
 
       <section style={{ background: "var(--cream-2)" }}>
+        <div className="wrap">
+          <div className="section-head reveal">
+            <span className="eyebrow">Darshan across India</span>
+            <h2>Top darshan site in every state</h2>
+            <p>One revered shrine for each state & union territory. Tap a card to watch its live darshan — featured streams play in-app, the rest open the temple's current live stream on YouTube.</p>
+          </div>
+          <StateDarshan states={STATES} />
+        </div>
+      </section>
+
+      <section style={{ background: "var(--cream)" }}>
         <div className="wrap">
           <div className="cta-band reveal">
             <h2>Turn darshan into devotion</h2>
