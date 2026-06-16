@@ -182,3 +182,24 @@ Site anti-bot blocked (403); assessed from public listings/app-store.
 | Free transit-aware puja calculator | ✅ | ❌ | Aastha leads |
 
 **Built this round:** à-la-carte chadhava offerings (added to a booking, priced, recorded) and a printable puja completion certificate per order. Deferred: festive/monthly ritual grouping.
+
+---
+
+## Reference addendum — MandirVandana (mandirvandana.com) · added 2026-06-16
+
+Site anti-bot blocked (403); assessed from public listings.
+
+**MandirVandana positioning:** book puja & chadhava at temples, offer chadhava to your family deity (kuldevta) from afar, virtual puja with the priest explaining each step, and **personalized documentation — full puja video plus your sankalp & offering clips**.
+
+| Feature | Aastha | MandirVandana | Note |
+|---|---|---|---|
+| Book puja & chadhava at temples | ✅ | ✅ | parity |
+| À-la-carte chadhava offerings | ✅ | ✅ | parity (Aastha added in #17) |
+| Chadhava to family deity / kuldevta | ✅ via offerings + family names | ✅ | parity |
+| Full puja video | ✅ 48-hr HD | ✅ | parity |
+| Personalised **sankalp & offering clips** | ❌ → ✅ added | ✅ | **enhanced** — now an explicit deliverable |
+| Per-stage live order tracking | ✅ | ❌ | Aastha leads |
+| Transparent all-inclusive pricing | ✅ | ⚠️ | Aastha leads |
+| Free transit-aware puja calculator | ✅ | ❌ | Aastha leads |
+
+**Conclusion:** MandirVandana surfaces **no major new gap** — Aastha already matches or leads. The one distinctive nuance (personalised sankalp & offering clips) is now an explicit deliverable in Aastha's "what's included" and the order timeline. No new pages/features required.
