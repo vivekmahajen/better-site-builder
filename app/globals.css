@@ -534,3 +534,8 @@ table.cmp tbody tr:nth-child(even) { background: var(--cream); }
 
 .pc-place { font-size: .82rem; color: var(--ink-soft); margin-bottom: 10px; }
 .pc-warn { font-size: .82rem; color: #9a5b00; background: #fff5e6; border: 1px solid #f4d9a8; border-radius: 8px; padding: 9px 12px; margin-bottom: 12px; }
+
+.pc-transit { padding: 20px 24px; background: linear-gradient(135deg, rgba(212,160,23,.08), rgba(123,30,30,.05)); border: 1px solid var(--gold-soft); }
+.pc-transit-t { font-family: var(--font-head); font-weight: 700; color: var(--maroon); font-size: 1.05rem; }
+.pc-transit-dates { font-size: .78rem; color: var(--saffron-dark); font-weight: 600; margin-top: 2px; }
+.pc-transit-harness { font-size: .9rem; color: var(--ink); }
