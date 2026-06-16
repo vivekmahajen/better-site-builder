@@ -36,11 +36,11 @@ export default function StateDarshan({ states }) {
           <article className="card state-card reveal" key={s.region}>
             <div className="sc-top">
               <span className="state-badge">{s.region}</span>
-              {s.channel && <span className="state-live"><span className="dot pulse" />LIVE</span>}
+              {(s.channel || s.videoId) && <span className="state-live"><span className="dot pulse" />LIVE</span>}
             </div>
             <h3>{s.temple}</h3>
             <div className="sc-meta">{s.deity} · {s.city}</div>
-            {s.channel ? (
+            {s.channel || s.videoId ? (
               <button className="btn btn-primary btn-sm btn-block" onClick={() => setWatching({ ...s, ritual: s.deity })}>
                 ▶ Watch live darshan
               </button>
