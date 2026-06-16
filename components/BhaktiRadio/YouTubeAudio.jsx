@@ -19,6 +19,9 @@ function loadAPI() {
 }
 
 // Hidden YouTube player that plays a video's audio under the custom radio UI.
+// IMPORTANT: the IFrame API REPLACES the element it's given with an <iframe>.
+// We therefore mount it on a div we create ourselves (a child of the React-owned
+// host) so React never tracks the replaced node — avoiding "removeChild" crashes.
 const YouTubeAudio = forwardRef(function YouTubeAudio({ videoId, isPlaying, volume, isMuted, onProgress, onEnded }, ref) {
   const hostRef = useRef(null);
   const playerRef = useRef(null);
@@ -38,9 +41,13 @@ const YouTubeAudio = forwardRef(function YouTubeAudio({ videoId, isPlaying, volu
   // Create the player once per videoId (parent keys this component by videoId).
   useEffect(() => {
     let cancelled = false;
+    const host = hostRef.current;
+    const mount = document.createElement("div"); // YouTube will replace THIS, not host
+    if (host) host.appendChild(mount);
+
     loadAPI().then((YT) => {
-      if (cancelled || !hostRef.current) return;
-      playerRef.current = new YT.Player(hostRef.current, {
+      if (cancelled || !host || !host.contains(mount)) return;
+      playerRef.current = new YT.Player(mount, {
         width: "0", height: "0", videoId,
         playerVars: { autoplay: isPlaying ? 1 : 0, controls: 0, playsinline: 1, rel: 0 },
         events: {
@@ -49,11 +56,14 @@ const YouTubeAudio = forwardRef(function YouTubeAudio({ videoId, isPlaying, volu
         },
       });
     }).catch(() => {});
+
     return () => {
       cancelled = true;
       clearInterval(pollRef.current);
       try { playerRef.current?.destroy(); } catch { /* already gone */ }
+      playerRef.current = null;
       readyRef.current = false;
+      // We only ever remove our own created child; React still owns `host`.
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoId]);
@@ -75,7 +85,7 @@ const YouTubeAudio = forwardRef(function YouTubeAudio({ videoId, isPlaying, volu
     return () => clearInterval(pollRef.current);
   }, [onProgress]);
 
-  return <div ref={hostRef} style={{ position: "absolute", width: 0, height: 0, left: -9999, top: 0 }} aria-hidden />;
+  return <div ref={hostRef} style={{ position: "absolute", width: 0, height: 0, left: -9999, top: 0, overflow: "hidden" }} aria-hidden />;
 });
 
 export default YouTubeAudio;
