@@ -22,7 +22,7 @@ function loadAPI() {
 // IMPORTANT: the IFrame API REPLACES the element it's given with an <iframe>.
 // We therefore mount it on a div we create ourselves (a child of the React-owned
 // host) so React never tracks the replaced node — avoiding "removeChild" crashes.
-const YouTubeAudio = forwardRef(function YouTubeAudio({ videoId, isPlaying, volume, isMuted, onProgress, onEnded }, ref) {
+const YouTubeAudio = forwardRef(function YouTubeAudio({ videoId, isPlaying, volume, isMuted, onProgress, onEnded, onError }, ref) {
   const hostRef = useRef(null);
   const playerRef = useRef(null);
   const readyRef = useRef(false);
@@ -53,6 +53,7 @@ const YouTubeAudio = forwardRef(function YouTubeAudio({ videoId, isPlaying, volu
         events: {
           onReady: (e) => { readyRef.current = true; applyVol(); if (isPlaying) e.target.playVideo(); },
           onStateChange: (e) => { if (e.data === YT.PlayerState.ENDED) onEnded?.(); },
+          onError: (e) => onError?.(e.data),
         },
       });
     }).catch(() => {});

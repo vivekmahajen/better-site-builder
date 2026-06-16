@@ -8,18 +8,25 @@ import PlayerControls from "./PlayerControls";
 import AudioVisualizer from "./AudioVisualizer";
 import YouTubeAudio from "./YouTubeAudio";
 import { BHAKTI_CATALOG } from "@/lib/radio/catalog";
-import { TonePlayer, freqForId } from "@/lib/radio/tonePlayer";
 
-const LANGS = Object.entries(BHAKTI_CATALOG).map(([code, data]) => ({ code, ...data }));
-const toSec = (dur) => {
-  const [m, s] = String(dur).split(":").map(Number);
-  return (m || 0) * 60 + (s || 0);
-};
+// Only show songs that have a real YouTube source, and drop any artist/language
+// left empty — so every track listed actually plays a real recording.
+function buildCatalog() {
+  const out = {};
+  for (const [lang, data] of Object.entries(BHAKTI_CATALOG)) {
+    const artists = data.artists
+      .map((a) => ({ ...a, songs: a.songs.filter((s) => s.yt) }))
+      .filter((a) => a.songs.length > 0);
+    if (artists.length) out[lang] = { ...data, artists };
+  }
+  return out;
+}
 
-// Concept build: playback is simulated (a 1-second progress clock with
-// auto-advance). Wire real audio via NEXT_PUBLIC_RADIO_CDN + lib/radio/audioManager.
 export default function BhaktiRadio() {
-  const [lang, setLang] = useState("Hindi");
+  const CATALOG = useMemo(buildCatalog, []);
+  const LANGS = useMemo(() => Object.entries(CATALOG).map(([code, data]) => ({ code, ...data })), [CATALOG]);
+
+  const [lang, setLang] = useState(LANGS[0]?.code || "Hindi");
   const [artistIdx, setArtistIdx] = useState(0);
   const [mood, setMood] = useState("All");
   const [songIdx, setSongIdx] = useState(0);
@@ -28,68 +35,38 @@ export default function BhaktiRadio() {
   const [isMuted, setIsMuted] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
 
-  const artists = BHAKTI_CATALOG[lang]?.artists || [];
+  const artists = CATALOG[lang]?.artists || [];
   const artist = artists[artistIdx];
-  const color = BHAKTI_CATALOG[lang]?.color;
+  const color = CATALOG[lang]?.color;
 
   const moods = useMemo(() => ["All", ...Array.from(new Set((artist?.songs || []).map((s) => s.mood)))], [artist]);
   const songs = useMemo(() => (mood === "All" ? artist?.songs || [] : (artist?.songs || []).filter((s) => s.mood === mood)), [artist, mood]);
   const song = songs[songIdx];
-  const usingYT = Boolean(song?.yt); // real audio via YouTube when an ID exists
   const ytRef = useRef(null);
   const onYtProgress = useCallback((c, t) => setProgress({ current: c || 0, total: t || 0 }), []);
 
-  // Ambient Web-Audio drone for songs WITHOUT a YouTube source (so it's audible).
-  const toneRef = useRef(null);
-  useEffect(() => {
-    toneRef.current = new TonePlayer();
-    return () => toneRef.current?.dispose();
-  }, []);
-  useEffect(() => {
-    const tp = toneRef.current;
-    if (!tp) return;
-    if (isPlaying && song && !usingYT) tp.start(freqForId(song.id), isMuted ? 0 : volume);
-    else tp.stop();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying, song?.id, usingYT]);
-  useEffect(() => {
-    if (!usingYT) toneRef.current?.setVolume(isMuted ? 0 : volume);
-  }, [volume, isMuted, usingYT]);
-
   const playSong = useCallback((i) => {
-    const s = songs[i];
-    if (!s) return;
+    if (!songs[i]) return;
     setSongIdx(i);
-    setProgress({ current: 0, total: toSec(s.dur) });
+    setProgress({ current: 0, total: 0 });
     setIsPlaying(true);
   }, [songs]);
 
   const handleNext = useCallback(() => {
-    if (!songs.length) return;
-    playSong((songIdx + 1) % songs.length);
+    if (songs.length) playSong((songIdx + 1) % songs.length);
   }, [songs, songIdx, playSong]);
 
   const handlePrev = () => songs.length && playSong((songIdx - 1 + songs.length) % songs.length);
 
   const togglePlay = () => {
     if (!song) return playSong(0);
-    if (progress.total === 0) return playSong(songIdx);
     setIsPlaying((v) => !v);
   };
 
-  // Simulated playback clock (only for non-YouTube / tone tracks).
-  useEffect(() => {
-    if (!isPlaying || usingYT || progress.total === 0) return undefined;
-    const id = setInterval(() => setProgress((p) => ({ ...p, current: Math.min(p.current + 1, p.total) })), 1000);
-    return () => clearInterval(id);
-  }, [isPlaying, progress.total]);
-
-  // Auto-advance when a track finishes.
-  useEffect(() => {
-    if (!usingYT && isPlaying && progress.total > 0 && progress.current >= progress.total) handleNext();
-  }, [progress, isPlaying, handleNext, usingYT]);
-
   const reset = (fn) => { setIsPlaying(false); setSongIdx(0); setProgress({ current: 0, total: 0 }); fn(); };
+
+  // If a video can't be embedded (region/embedding disabled), skip to the next.
+  const handleError = useCallback(() => { if (songs.length > 1) handleNext(); else setIsPlaying(false); }, [songs, handleNext]);
 
   return (
     <div className="bhakti-radio">
@@ -117,15 +94,15 @@ export default function BhaktiRadio() {
           song={song} artist={artist} lang={lang}
           isPlaying={isPlaying} progress={progress} volume={volume} isMuted={isMuted}
           onTogglePlay={togglePlay} onNext={handleNext} onPrev={handlePrev}
-          onSeek={(pct) => { if (usingYT) ytRef.current?.seekTo((pct / 100) * (progress.total || 0)); else setProgress((p) => ({ ...p, current: (pct / 100) * p.total })); }}
+          onSeek={(pct) => ytRef.current?.seekTo((pct / 100) * (progress.total || 0))}
           onVolumeChange={(v) => { setVolume(v); setIsMuted(v === 0); }}
           onToggleMute={() => setIsMuted((v) => !v)}
         />
         <AudioVisualizer isPlaying={isPlaying} color={color} />
-        {usingYT && (
-          <YouTubeAudio key={song.yt} ref={ytRef} videoId={song.yt} isPlaying={isPlaying} volume={volume} isMuted={isMuted} onProgress={onYtProgress} onEnded={handleNext} />
+        {song?.yt && (
+          <YouTubeAudio key={song.yt} ref={ytRef} videoId={song.yt} isPlaying={isPlaying} volume={volume} isMuted={isMuted} onProgress={onYtProgress} onEnded={handleNext} onError={handleError} />
         )}
-        <p className="radio-note">▶ Songs marked with a play dot stream the real recording via YouTube; others use a synthesised ambient tone. Connect a licensed CDN for full inline audio.</p>
+        <p className="radio-note">Every track streams the real recording via YouTube. Tap a song to play.</p>
       </div>
     </div>
   );
