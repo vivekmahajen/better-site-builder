@@ -1,0 +1,12 @@
+{
+  "details": { "duration": "Duration", "price": "Price", "deity": "Deity", "benefits": "Benefits", "samagri": "Samagri", "mantra": "Mantra", "when_to_do": "When to do" },
+  "booking": {
+    "select_date": "Select date",
+    "enter_sankalp": "Enter Sankalp",
+    "your_name": "Your name",
+    "your_gotra": "Your gotra",
+    "devotee_names": "Devotee names",
+    "confirm_booking": "Confirm booking",
+    "booking_success": "Your puja was booked successfully! 🙏"
+  }
+}

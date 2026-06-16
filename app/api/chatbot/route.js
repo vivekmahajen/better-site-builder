@@ -42,6 +42,42 @@ ESCALATE to human support (24×7) for payment/refund issues, pandit no-show, str
 
 NEVER: trivialize a spiritual concern; make specific astrological predictions; recommend gemstones without a Jyotishi; promise puja "guarantees" a worldly outcome; reveal you are an AI; use corporate language; rush a booking; or ignore an emotional cue.`;
 
+// Per-language instruction appended to the system prompt so Devi replies in the
+// user's chosen language while keeping her persona and Aastha knowledge.
+const LANG_ADDITIONS = {
+  hi: 'LANGUAGE: Respond primarily in Hindi (Devanagari). Greeting "जय श्री राम! 🙏 नमस्ते जी". Keep URLs and product names in English. Address users with "जी"/"आप".',
+  bn: "LANGUAGE: Respond primarily in Bengali (বাংলা). Greeting \"জয় শ্রীরাম! 🙏 নমস্কার জি\". Address users formally as \"আপনি\". Keep URLs in English.",
+  ta: 'LANGUAGE: Respond primarily in Tamil (தமிழ்). Greeting "வணக்கம் 🙏". Address users as "நீங்கள்". Keep URLs in English.',
+  te: 'LANGUAGE: Respond primarily in Telugu (తెలుగు). Greeting "నమస్కారం 🙏". Address users as "మీరు". Keep URLs in English.',
+  mr: 'LANGUAGE: Respond primarily in Marathi (मराठी). Greeting "नमस्कार जी 🙏". Address users as "आपण". Keep URLs in English.',
+  gu: 'LANGUAGE: Respond primarily in Gujarati (ગુજરાતી). Greeting "જય શ્રી કૃષ્ણ! 🙏". Address users as "આપ". Keep URLs in English.',
+  ur: "LANGUAGE: Respond primarily in Urdu (اردو, RTL). Greeting \"آداب 🙏\". Address users as \"آپ\". Keep URLs in English.",
+  kn: 'LANGUAGE: Respond primarily in Kannada (ಕನ್ನಡ). Greeting "ನಮಸ್ಕಾರ 🙏". Address users as "ನೀವು". Keep URLs in English.',
+  ml: 'LANGUAGE: Respond primarily in Malayalam (മലയാളം). Greeting "നമസ്കാരം 🙏". Keep URLs in English.',
+  pa: 'LANGUAGE: Respond primarily in Punjabi (ਪੰਜਾਬੀ). Greeting "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ 🙏". Address users as "ਆਪ ਜੀ". Keep URLs in English.',
+  or: 'LANGUAGE: Respond primarily in Odia (ଓଡ଼ିଆ). Greeting "ନମସ୍କାର 🙏". Address users as "ଆପଣ". Keep URLs in English.',
+};
+function systemFor(lang) {
+  return LANG_ADDITIONS[lang] ? `${SYSTEM_PROMPT}\n\n${LANG_ADDITIONS[lang]}` : SYSTEM_PROMPT;
+}
+
+// Hindi rule-based fallback (used when no API key and lang === 'hi').
+function deviFallbackHi(text) {
+  const q = (text || "").toLowerCase();
+  const has = (...w) => w.some((x) => q.includes(x));
+  if (has("pass away", "passed away", "died", "death", "grief", "lost my"))
+    return `जी… 🙏 आपकी क्षति के लिए मुझे गहरा दुख है। प्रभु आत्मा को शांति और मुक्ति प्रदान करें।\n\n*"आत्मा कभी मरती नहीं" — गीता 2.20*\n\nपितरों की शांति के लिए **पितृ तर्पण** और **श्राद्ध पूजा** सबसे पवित्र हैं; गया में **पिंड दान** अत्यंत फलदायी माना जाता है। हम इन्हें सत्यापित पंडित द्वारा लाइव स्ट्रीम के साथ करवा सकते हैं। समय लीजिए जी, कोई जल्दी नहीं। 🪔`;
+  if (has("track", "order", "aas-"))
+    return `हाँ जी, बिलकुल! 🙏 **/track-order** पर जाएं और अपनी बुकिंग आईडी (जैसे AAS-12345) दर्ज करें। आपको हर चरण दिखेगा — ऑर्डर पुष्टि → पंडित नियुक्त → संकल्प → पूजा → वीडियो → प्रसाद। और कुछ सहायता चाहिए जी? 🪔`;
+  if (has("calculator", "kundli", "कुंडली", "कैलकुलेटर"))
+    return `बिलकुल जी! 🔮 हमारा निःशुल्क **पूजा कैलकुलेटर** (/puja-calculator) आपके जन्म विवरण से कुंडली बनाता है और सही पूजाओं की सलाह देता है। क्या मैं आपको वहां ले चलूं? 🌸`;
+  if (has("dosha", "दोष", "mangal", "shani", "kaal sarp"))
+    return `जी, चिंता मत कीजिए। 🙏 दोष कोई श्राप नहीं — सही उपाय से इसका निवारण होता है। **/dosha-nivaran** पर हर दोष का उपाय, बीज मंत्र और मुहूर्त दिया है। पहले निःशुल्क कैलकुलेटर (/puja-calculator) पर पुष्टि कर लें। ✨`;
+  if (has("book", "puja", "पूजा", "बुक"))
+    return `माँ का आशीर्वाद ज़रूर मिलेगा जी! 🙏 **/pujas** पर 200+ पूजाएं हैं — अपनी आवश्यकता अनुसार (आरोग्य, समृद्धि, विवाह) चुनें, सत्यापित पंडित और पारदर्शी मूल्य के साथ। बताइए क्या चाहते हैं, मैं सही पूजा सुझाती हूं। 🌸`;
+  return `जय श्री राम! 🙏 नमस्ते जी, मैं **देवी** हूं। मैं पूजा बुक करने (/pujas), निःशुल्क पूजा कैलकुलेटर (/puja-calculator), लाइव दर्शन (/live-darshan), दोष निवारण (/dosha-nivaran), ऑर्डर ट्रैक (/track-order) या दान (/daan) में आपकी सहायता कर सकती हूं। बताइए, आज मन में क्या है? 🌸`;
+}
+
 // Best-effort in-memory rate limit (resets on cold start): 30 messages / IP / hour.
 const HITS = new Map();
 function rateLimited(ip) {
@@ -88,10 +124,11 @@ export async function POST(req) {
   } catch {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
-  const { messages } = body || {};
+  const { messages, lang } = body || {};
   if (!Array.isArray(messages) || messages.length === 0) {
     return NextResponse.json({ error: "messages_required" }, { status: 400 });
   }
+  const fallback = lang === "hi" ? deviFallbackHi : deviFallback;
 
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "anon";
   if (rateLimited(ip)) {
@@ -107,7 +144,7 @@ export async function POST(req) {
   const lastUser = [...clean].reverse().find((m) => m.role === "user")?.content || "";
 
   if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json({ content: deviFallback(lastUser), mode: "fallback" });
+    return NextResponse.json({ content: fallback(lastUser), mode: "fallback" });
   }
 
   try {
@@ -116,13 +153,13 @@ export async function POST(req) {
     const response = await client.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 600,
-      system: SYSTEM_PROMPT,
+      system: systemFor(lang),
       messages: clean,
     });
     const content = response.content.map((b) => (b.type === "text" ? b.text : "")).join("").trim();
-    return NextResponse.json({ content: content || deviFallback(lastUser), mode: "live" });
+    return NextResponse.json({ content: content || fallback(lastUser), mode: "live" });
   } catch (err) {
     console.error("Devi API error:", err);
-    return NextResponse.json({ content: deviFallback(lastUser), mode: "fallback" });
+    return NextResponse.json({ content: fallback(lastUser), mode: "fallback" });
   }
 }

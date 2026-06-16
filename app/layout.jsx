@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Fx from "@/components/Fx";
 import DeviChatbot from "@/components/DeviChatbot";
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://aastha.example";
 
@@ -16,7 +17,10 @@ export const metadata = {
     "Aastha brings the temple home: book personalized puja & chadhava at 1000+ temples with verified priests, live order tracking, prasad delivery, live darshan and astrology — with total transparency.",
   applicationName: "Aastha",
   keywords: ["online puja", "chadhava", "live darshan", "puja booking", "kundli puja calculator", "dosha nivaran", "astrology", "prasad delivery"],
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    languages: { "en-IN": "/", "hi-IN": "/", "x-default": "/" },
+  },
   openGraph: {
     type: "website",
     siteName: "Aastha",
@@ -55,11 +59,13 @@ export default function RootLayout({ children }) {
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSONLD) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSONLD) }} />
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <Fx />
-        <DeviChatbot />
+        <LanguageProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <Fx />
+          <DeviChatbot />
+        </LanguageProvider>
       </body>
     </html>
   );
