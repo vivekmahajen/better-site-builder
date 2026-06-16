@@ -51,7 +51,6 @@ const LANG_ADDITIONS = {
   te: 'LANGUAGE: Respond primarily in Telugu (తెలుగు). Greeting "నమస్కారం 🙏". Address users as "మీరు". Keep URLs in English.',
   mr: 'LANGUAGE: Respond primarily in Marathi (मराठी). Greeting "नमस्कार जी 🙏". Address users as "आपण". Keep URLs in English.',
   gu: 'LANGUAGE: Respond primarily in Gujarati (ગુજરાતી). Greeting "જય શ્રી કૃષ્ણ! 🙏". Address users as "આપ". Keep URLs in English.',
-  ur: "LANGUAGE: Respond primarily in Urdu (اردو, RTL). Greeting \"آداب 🙏\". Address users as \"آپ\". Keep URLs in English.",
   kn: 'LANGUAGE: Respond primarily in Kannada (ಕನ್ನಡ). Greeting "ನಮಸ್ಕಾರ 🙏". Address users as "ನೀವು". Keep URLs in English.',
   ml: 'LANGUAGE: Respond primarily in Malayalam (മലയാളം). Greeting "നമസ്കാരം 🙏". Keep URLs in English.',
   pa: 'LANGUAGE: Respond primarily in Punjabi (ਪੰਜਾਬੀ). Greeting "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ 🙏". Address users as "ਆਪ ਜੀ". Keep URLs in English.',
