@@ -410,3 +410,48 @@ table.cmp tbody tr:nth-child(even) { background: var(--cream); }
 .pj-ben-t { font-size: .86rem; font-weight: 700; color: var(--ink); }
 .pj-ben-d { font-size: .78rem; color: var(--ink-soft); }
 @media (max-width: 560px) { .pj-panch-grid, .pj-ben-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Dosha Nivaran ---------- */
+.dosha-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
+.dosha-stat { text-align: center; background: var(--cream-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 18px; }
+.dosha-stat .num { font-family: var(--font-head); font-size: 1.8rem; font-weight: 700; color: var(--maroon); }
+.dosha-stat .lbl { font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); }
+
+.dosha-card { padding: 0; overflow: hidden; cursor: pointer; }
+.dc-art { height: 130px; position: relative; display: grid; place-items: center; }
+.dc-art .dc-icon { font-size: 3.4rem; filter: drop-shadow(0 4px 14px rgba(0,0,0,.4)); transition: transform .25s; }
+.dosha-card:hover .dc-art .dc-icon { transform: scale(1.1); }
+.dc-planet { position: absolute; bottom: 10px; left: 12px; font-size: .68rem; color: rgba(255,255,255,.85); background: rgba(0,0,0,.4); padding: 3px 9px; border-radius: 999px; backdrop-filter: blur(6px); }
+.dc-body { padding: 16px 18px 18px; }
+.dc-san { font-size: .78rem; color: var(--ink-soft); }
+.dosha-card h3 { font-size: 1.1rem; margin: 2px 0 8px; }
+.dc-desc { font-size: .86rem; color: var(--ink-soft); margin-bottom: 12px;
+  display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.dc-effects { display: flex; flex-direction: column; gap: 5px; margin: 12px 0; }
+.dc-effect { font-size: .78rem; color: var(--ink-soft); display: flex; gap: 6px; align-items: center; }
+.dc-remedy { font-size: .8rem; font-weight: 700; color: var(--saffron-dark); background: var(--cream); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
+
+/* Severity meter */
+.sev-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+.sev-label { font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); width: 64px; flex: 0 0 auto; }
+.sev-track { flex: 1; height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; }
+.sev-fill { height: 100%; border-radius: 999px; }
+.sev-val { font-size: .72rem; color: var(--ink-soft); width: 30px; text-align: right; }
+
+/* Dosha modal */
+.dosha-modal-art { height: 140px; display: grid; place-items: center; position: relative; border-radius: var(--radius) var(--radius) 0 0; }
+.dosha-sev-grid { background: var(--cream); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin-bottom: 8px; }
+.dosha-effects-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.dosha-effects-list li { display: flex; gap: 10px; align-items: flex-start; font-size: .9rem; color: var(--ink); background: #fdecec; border: 1px solid #f6d4d4; border-radius: 8px; padding: 9px 12px; }
+.dosha-puja-block { background: var(--cream-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.dosha-puja-name { font-family: var(--font-head); font-weight: 700; color: var(--maroon); margin-bottom: 6px; }
+.dosha-mantra { background: #1c1330; color: #e9ddf2; border-radius: 10px; padding: 14px 16px; }
+.dosha-mantra-san { font-size: 1.02rem; color: var(--gold-soft); line-height: 1.7; margin-bottom: 6px; }
+.dosha-mantra-mean { font-size: .84rem; font-style: italic; opacity: .8; }
+.dosha-mantra-count { font-size: .8rem; margin-top: 6px; color: var(--gold-soft); }
+.dosha-rem-list { display: flex; flex-direction: column; gap: 8px; }
+.dosha-rem { display: flex; gap: 10px; background: var(--green-soft); border: 1px solid #cfe9d9; border-radius: 8px; padding: 10px 12px; }
+.dosha-rem-i { font-size: 1.2rem; flex: 0 0 auto; }
+.dosha-rem-t { font-size: .88rem; font-weight: 700; color: var(--green); }
+.dosha-rem-d { font-size: .82rem; color: var(--ink-soft); }
+@media (max-width: 560px) { .dosha-stats { grid-template-columns: 1fr 1fr; } }
