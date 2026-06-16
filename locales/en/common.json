@@ -9,11 +9,10 @@
     "daily": "Daily",
     "track_order": "Track Order",
     "book_puja": "Book a puja",
-    "track_my_puja": "Track my puja"
+    "track_my_puja": "Track my puja",
+    "home": "Home"
   },
-  "hero": {
-    "tagline": "Bridge to the divine"
-  },
+  "hero": { "tagline": "Bridge to the divine" },
   "footer": {
     "blurb": "Bringing the temple home with verified priests, live tracking and total transparency. Devotion you can trust — and see.",
     "explore": "Explore",
@@ -21,8 +20,74 @@
     "support": "Support",
     "made": "Made with devotion 🙏"
   },
-  "language_selector": {
-    "choose_language": "Choose language",
-    "coming_soon": "More languages coming soon"
+  "language_selector": { "choose_language": "Choose language", "coming_soon": "More languages coming soon" },
+  "home": {
+    "eyebrow": "Trusted devotion, delivered transparently",
+    "h1a": "Bring the ", "accent": "temple home", "h1b": " — and watch every blessing arrive.",
+    "lead": "Book personalized puja & chadhava at 1,000+ temples with verified priests, then follow your offering live — from sankalp to ritual to prasad at your door. Plus live darshan, astrology and a 5,000+ aarti library.",
+    "cta_book": "🪔 Book a puja", "cta_track": "See live tracking →",
+    "badge_ritual": "Ritual in progress", "badge_prasad": "📦 Prasad out for delivery",
+    "stats": [
+      { "num": "1,000+", "lbl": "partner temples" },
+      { "num": "48 hr", "lbl": "video SLA, guaranteed" },
+      { "num": "100%", "lbl": "verified priests" },
+      { "num": "4.9★", "lbl": "devotee rating" }
+    ],
+    "strip": ["✓ Live order tracking", "✓ Verified Vedic priests", "✓ Prasad to your doorstep", "✓ Transparent pricing", "✓ 24×7 human support"],
+    "gaps_eyebrow": "Why devotees switch to Aastha",
+    "gaps_head": "Devotion you can actually see happening",
+    "gaps_lead": "Other apps take your money and leave you waiting. We built Aastha around the things devotees told us were broken.",
+    "gaps": [
+      { "ico": "📍", "h": "Live order tracking", "p": "A real timeline for every booking — priest assigned, sankalp recorded, ritual performed, video uploaded, prasad delivered. No more silence after payment.", "tag": "Closes: \"video never arrived\"" },
+      { "ico": "✅", "h": "Verified priests, unhurried rituals", "p": "Every pandit is credential-checked. We confirm your name & gotra pronunciation before the puja, and guarantee a full, unhurried ritual.", "tag": "Closes: \"wrong names, rushed pujas\"" },
+      { "ico": "📦", "h": "Prasad to your doorstep", "p": "Consecrated prasad couriered home with a trackable shipment number, folded right into your order timeline.", "tag": "Closes: \"no prasad clarity\"" },
+      { "ico": "💬", "h": "24×7 human support", "p": "Reach a real person by chat or call with a published response-time SLA — not an inbox that ignores you.", "tag": "Closes: \"support never replied\"" },
+      { "ico": "🧾", "h": "Transparent pricing", "p": "Every puja shows an all-inclusive price and an exact \"what's included\" list. No surprises at checkout.", "tag": "Closes: \"opaque pricing\"" },
+      { "ico": "🔐", "h": "Secure, self-serve account", "p": "Change your phone number yourself with dual-OTP verification. No login loops, no OTP stuck on an old number.", "tag": "Closes: \"login & OTP defects\"" }
+    ],
+    "track_eyebrow": "The Aastha difference",
+    "track_head": "Track your puja like you track a parcel",
+    "track_lead": "Enter a demo booking ID to see the transparency no other devotional app offers.",
+    "popular_eyebrow": "Most-booked this week",
+    "popular_head": "Popular pujas & chadhava",
+    "popular_lead": "Performed by verified priests at India's most revered temples — every price all-inclusive.",
+    "view_all": "View all pujas →",
+    "how_eyebrow": "Simple & sacred",
+    "how_head": "How Aastha works",
+    "steps": [
+      { "h": "Choose your puja", "p": "Pick from 1,000+ temples with clear, all-inclusive pricing." },
+      { "h": "Share name & gotra", "p": "We confirm pronunciation with you before the ritual." },
+      { "h": "Track it live", "p": "Follow each stage on your timeline as it happens." },
+      { "h": "Receive video + prasad", "p": "HD video within 48 hrs; prasad couriered to your door." }
+    ],
+    "cmp_eyebrow": "Honest comparison",
+    "cmp_head": "How Aastha compares",
+    "cmp_lead": "The same devotion you expect — plus the transparency you deserve.",
+    "cmp_th_feature": "Feature",
+    "cmp_note": "Comparison reflects publicly available features & common user feedback as of June 2026; for illustration. Sri Mandir, VAMA and Utsav do offer kundli-based puja suggestions — but as paid reports or astrologer consultations, not a free, instant, self-serve calculator whose recommended pujas are directly bookable and tracked.",
+    "cmp_features": [
+      "Online puja & chadhava", "Live order tracking (per stage)", "Verified-priest credentials shown", "Name pronunciation confirmed", "Prasad delivery + courier tracking", "Live darshan", "Live astrology consultation", "Free, instant birth-chart puja calculator", "Calculator → one-tap bookable & tracked pujas", "Factors today's live planetary transits", "Browse pujas by life goal (health, wealth…)", "Add family & friends to one sankalp", "Choose chadhava offerings à la carte", "Personalised sankalp & offering clips", "Puja completion certificate", "Temple daan — choose the cause", "Subscription pujas", "Transparent \"what's included\" pricing", "24×7 human support with SLA"
+    ],
+    "testi_eyebrow": "From our devotees",
+    "testi_head": "Faith, finally without the worry",
+    "testimonials": [
+      { "q": "For the first time I could actually see when the priest was assigned and when the ritual happened. The prasad reached Pune in three days.", "av": "RK", "nm": "Radhika K.", "pl": "Pune" },
+      { "q": "They called to confirm how to pronounce my late father's name before the shraddh puja. That small thing meant everything.", "av": "AM", "nm": "Anil M.", "pl": "Dubai" },
+      { "q": "Booked a weekly subscription puja for my mother's health. The HD video arrives every Monday, on time, every single week.", "av": "SP", "nm": "Suresh P.", "pl": "Chennai" }
+    ],
+    "cta_head": "Your prayers deserve to be seen through.",
+    "cta_lead": "Join Aastha and experience devotion with complete transparency — from sankalp to prasad at your door.",
+    "cta_book2": "🪔 Book your first puja",
+    "cta_darshan": "Watch live darshan"
+  },
+  "pujas_page": {
+    "eyebrow": "1,000+ temples · verified priests",
+    "title": "Book a puja or chadhava",
+    "intro": "Every puja is performed by a credential-checked priest with an all-inclusive price and live tracking from sankalp to prasad."
+  },
+  "calc_page": {
+    "eyebrow": "Free · instant · transit-aware",
+    "title": "Puja Calculator",
+    "intro": "Enter your birth details for a real Vedic chart, your active doshas, and the pujas best suited to you right now — each one bookable and trackable in a tap."
   }
 }
