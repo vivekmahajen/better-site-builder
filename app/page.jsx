@@ -19,12 +19,13 @@ const Cell = ({ on }) => on ? <td className="yes">✓</td> : <td className="no">
 
 export default function Home() {
   const { t } = useTranslation();
-  const stats = t("home.stats");
-  const strip = t("home.strip");
-  const gaps = t("home.gaps");
-  const steps = t("home.steps");
-  const features = t("home.cmp_features");
-  const testimonials = t("home.testimonials");
+  const A = (v) => (Array.isArray(v) ? v : []);
+  const stats = A(t("home.stats"));
+  const strip = A(t("home.strip"));
+  const gaps = A(t("home.gaps"));
+  const steps = A(t("home.steps"));
+  const features = A(t("home.cmp_features"));
+  const testimonials = A(t("home.testimonials"));
 
   return (
     <>
@@ -164,7 +165,7 @@ export default function Home() {
                 {features.map((label, i) => (
                   <tr key={label}>
                     <td>{label}</td>
-                    <Cell on={CMP[i][0]} /><Cell on={CMP[i][1]} /><Cell on={CMP[i][2]} />
+                    <Cell on={(CMP[i] || [])[0]} /><Cell on={(CMP[i] || [])[1]} /><Cell on={(CMP[i] || [])[2]} />
                     <td className="col-us yes">✓</td>
                   </tr>
                 ))}
