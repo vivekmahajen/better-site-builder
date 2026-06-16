@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import BhaktiRadio from "@/components/BhaktiRadio";
 
 export const metadata = {
@@ -19,7 +20,7 @@ export default function RadioPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSONLD) }} />
       <section className="radio-page">
         <div className="wrap" style={{ maxWidth: 760 }}>
-          <BhaktiRadio />
+          <Suspense fallback={null}><BhaktiRadio /></Suspense>
         </div>
       </section>
     </>

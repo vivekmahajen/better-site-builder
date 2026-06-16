@@ -5,9 +5,11 @@ import ChatMessage from "./ChatMessage";
 import TypingIndicator from "./TypingIndicator";
 import QuickReplies from "./QuickReplies";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useRouter } from "next/navigation";
 
 export default function DeviChatbot() {
-  const { t, lang } = useLanguage();
+  const { t, lang, setLanguage } = useLanguage();
+  const router = useRouter();
   const QUICK_REPLIES = [
     { label: t("devi.quick_replies.book_puja"), value: "I want to book a puja" },
     { label: t("devi.quick_replies.calculator"), value: "How does the free puja calculator work?" },
@@ -54,6 +56,11 @@ export default function DeviChatbot() {
         }),
       });
       const data = await response.json();
+      (data.actions || []).forEach((a) => {
+        if (!a) return;
+        if ((a.type === "navigate" || a.type === "play_radio") && a.href) router.push(a.href);
+        else if (a.type === "set_language" && a.lang) setLanguage(a.lang);
+      });
       setMessages((prev) => [...prev, { role: "assistant", content: data.content, timestamp: new Date() }]);
     } catch {
       setMessages((prev) => [...prev, {
