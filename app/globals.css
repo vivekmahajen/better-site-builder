@@ -528,3 +528,6 @@ table.cmp tbody tr:nth-child(even) { background: var(--cream); }
 .pc-disclaimer { font-size: .78rem; color: var(--ink-soft); font-style: italic; background: var(--cream); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin-top: 8px; }
 
 @media (max-width: 560px) { .pc-grid { grid-template-columns: 1fr; } .pc-grid .field.full { grid-column: span 1; } .pr-grid { grid-template-columns: 1fr; } .dasha-row { grid-template-columns: 110px 1fr auto; } }
+
+.pr-foot-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.pr-foot-row .pj-benefits { margin: 0; }

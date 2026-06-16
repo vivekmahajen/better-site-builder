@@ -16,7 +16,7 @@ const CONCERNS = [
   ["peace", "Peace of Mind"], ["prosperity", "Wealth & Prosperity"], ["education", "Education & Knowledge"], ["protection", "Protection from Evil"],
 ];
 
-function PujaRec({ p }) {
+function PujaRec({ p, onBook }) {
   const [open, setOpen] = useState(p.rank === 1);
   const pri = PRI[p.priority] || PRI.medium;
   return (
@@ -38,10 +38,91 @@ function PujaRec({ p }) {
             <div className="pr-cell"><div className="pr-cell-l">🌿 Key samagri</div><div>{p.key_samagri}</div></div>
           </div>
           <div className="pr-mantra"><span>Sacred mantra — chant 108 times</span>{p.mantra}</div>
-          <div className="pj-benefits"><span className="pj-benefit">✦ {p.primary_benefit}</span></div>
+          <div className="pr-foot-row">
+            <div className="pj-benefits"><span className="pj-benefit">✦ {p.primary_benefit}</span></div>
+            {p.bookSlug && (
+              <button className="btn btn-primary btn-sm" onClick={() => onBook(p)}>
+                🪔 Book {p.bookPrice ? `· ₹${p.bookPrice.toLocaleString("en-IN")}` : "this puja"}
+              </button>
+            )}
+          </div>
         </div>
       )}
     </article>
+  );
+}
+
+function BookingModal({ puja, defaultName, onClose }) {
+  const [devotee, setDevotee] = useState(defaultName || "");
+  const [gotra, setGotra] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [order, setOrder] = useState(null);
+
+  async function submit(e) {
+    e.preventDefault();
+    if (!devotee.trim()) { return; }
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: puja.bookSlug, devotee, gotra }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "failed");
+      setOrder(data.order);
+    } catch {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-head">
+          <div>
+            <h3>{order ? "Booking confirmed" : `Book: ${puja.bookName || puja.name}`}</h3>
+            <div className="temple">Recommended for {defaultName}</div>
+          </div>
+          <button className="modal-close" aria-label="Close" onClick={onClose}>×</button>
+        </div>
+        <div className="modal-body">
+          {!order ? (
+            <form onSubmit={submit}>
+              <div className="field">
+                <label htmlFor="pc-book-name">Name for the sankalp *</label>
+                <input id="pc-book-name" value={devotee} onChange={(e) => setDevotee(e.target.value)} placeholder="e.g. Sharma family" autoFocus />
+              </div>
+              <div className="field">
+                <label htmlFor="pc-book-gotra">Gotra (optional)</label>
+                <input id="pc-book-gotra" value={gotra} onChange={(e) => setGotra(e.target.value)} placeholder="e.g. Kashyap" />
+              </div>
+              {puja.bookPrice != null && (
+                <div className="price-line">
+                  <span style={{ color: "var(--ink-soft)" }}>All-inclusive total</span>
+                  <span className="price">₹{puja.bookPrice.toLocaleString("en-IN")}</span>
+                </div>
+              )}
+              <button className="btn btn-primary btn-block" disabled={submitting}>
+                {submitting ? "Confirming…" : "Confirm & pay (demo)"}
+              </button>
+              <p style={{ fontSize: ".78rem", color: "var(--ink-soft)", textAlign: "center", marginTop: 10 }}>
+                We'll confirm name &amp; gotra pronunciation before the ritual.
+              </p>
+            </form>
+          ) : (
+            <div className="success-box">
+              <div className="big">🪔</div>
+              <p style={{ color: "var(--ink-soft)" }}>Your booking ID</p>
+              <div className="oid">{order.id}</div>
+              <p style={{ color: "var(--ink-soft)", marginBottom: 18 }}>
+                Saved to your account — follow every stage from sankalp to prasad.
+              </p>
+              <Link href={`/track-order?id=${order.id}`} className="btn btn-primary btn-block">Track this puja →</Link>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -50,6 +131,7 @@ export default function PujaCalculator() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
+  const [booking, setBooking] = useState(null);
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
   async function submit(e) {
@@ -133,7 +215,8 @@ export default function PujaCalculator() {
         <div className="priority-row">
           {Object.values(PRI).map((p) => <span className={`pri-chip ${p.cls}`} key={p.label}>{p.label}</span>)}
         </div>
-        <div className="pc-recs">{reading.pujas.map((p) => <PujaRec key={p.rank} p={p} />)}</div>
+        <div className="pc-recs">{reading.pujas.map((p) => <PujaRec key={p.rank} p={p} onBook={setBooking} />)}</div>
+        {booking && <BookingModal puja={booking} defaultName={chart.name} onClose={() => setBooking(null)} />}
 
         <div className="card pc-callout sadhana"><div className="pc-callout-t">🌿 Your daily sadhana</div><p>{reading.daily_sadhana}</p></div>
         <div className="card pc-callout golden"><div className="pc-callout-t">🌅 Golden muhurta this week</div><p>{reading.golden_muhurta}</p></div>
