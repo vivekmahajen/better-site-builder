@@ -3,7 +3,12 @@ import { createBooking, listOrders } from "@/lib/db";
 import { getPuja } from "@/lib/catalog";
 
 export async function GET() {
-  return NextResponse.json(listOrders());
+  try {
+    return NextResponse.json(await listOrders());
+  } catch (err) {
+    console.error("bookings GET failed:", err);
+    return NextResponse.json({ error: "server_error" }, { status: 500 });
+  }
 }
 
 export async function POST(req) {
@@ -21,13 +26,17 @@ export async function POST(req) {
     return NextResponse.json({ error: "devotee_required" }, { status: 400 });
   }
 
-  const order = createBooking({
-    puja: puja.name,
-    temple: puja.temple,
-    devotee: String(devotee).trim(),
-    gotra: gotra ? String(gotra).trim() : null,
-    priest: `${puja.priest} (Verified ✓, ${puja.priestYears} yrs)`,
-  });
-
-  return NextResponse.json({ id: order.id, order }, { status: 201 });
+  try {
+    const order = await createBooking({
+      puja: puja.name,
+      temple: puja.temple,
+      devotee: String(devotee).trim(),
+      gotra: gotra ? String(gotra).trim() : null,
+      priest: `${puja.priest} (Verified ✓, ${puja.priestYears} yrs)`,
+    });
+    return NextResponse.json({ id: order.id, order }, { status: 201 });
+  } catch (err) {
+    console.error("bookings POST failed:", err);
+    return NextResponse.json({ error: "server_error" }, { status: 500 });
+  }
 }

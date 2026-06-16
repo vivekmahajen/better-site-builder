@@ -1,4 +1,7 @@
 node_modules/
 .next/
 *.log
-data/*.db
+
+# Local env (never commit secrets)
+.env
+.env*.local
