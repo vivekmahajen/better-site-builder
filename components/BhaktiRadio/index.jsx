@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import SpiritualBackground from "./SpiritualBackground";
 import LanguageSelector from "./LanguageSelector";
 import ArtistCarousel from "./ArtistCarousel";
@@ -7,6 +7,7 @@ import SongList from "./SongList";
 import PlayerControls from "./PlayerControls";
 import AudioVisualizer from "./AudioVisualizer";
 import { BHAKTI_CATALOG } from "@/lib/radio/catalog";
+import { TonePlayer, freqForId } from "@/lib/radio/tonePlayer";
 
 const LANGS = Object.entries(BHAKTI_CATALOG).map(([code, data]) => ({ code, ...data }));
 const toSec = (dur) => {
@@ -33,6 +34,23 @@ export default function BhaktiRadio() {
   const moods = useMemo(() => ["All", ...Array.from(new Set((artist?.songs || []).map((s) => s.mood)))], [artist]);
   const songs = useMemo(() => (mood === "All" ? artist?.songs || [] : (artist?.songs || []).filter((s) => s.mood === mood)), [artist, mood]);
   const song = songs[songIdx];
+
+  // Ambient Web-Audio drone so playback is genuinely audible (no licensed files).
+  const toneRef = useRef(null);
+  useEffect(() => {
+    toneRef.current = new TonePlayer();
+    return () => toneRef.current?.dispose();
+  }, []);
+  useEffect(() => {
+    const tp = toneRef.current;
+    if (!tp) return;
+    if (isPlaying && song) tp.start(freqForId(song.id), isMuted ? 0 : volume);
+    else tp.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying, song?.id]);
+  useEffect(() => {
+    toneRef.current?.setVolume(isMuted ? 0 : volume);
+  }, [volume, isMuted]);
 
   const playSong = useCallback((i) => {
     const s = songs[i];
@@ -100,7 +118,7 @@ export default function BhaktiRadio() {
           onToggleMute={() => setIsMuted((v) => !v)}
         />
         <AudioVisualizer isPlaying={isPlaying} color={color} />
-        <p className="radio-note">Concept build — playback is simulated. Connect a music CDN or licensed stream to play real audio.</p>
+        <p className="radio-note">Plays a live ambient drone (tanpura-style, synthesised). Connect a music CDN or licensed stream for the full bhajan recordings.</p>
       </div>
     </div>
   );
