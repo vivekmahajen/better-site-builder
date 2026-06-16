@@ -21,6 +21,9 @@ function Timeline({ order }) {
           </div>
         ))}
       </div>
+      <div style={{ marginTop: 18, textAlign: "center" }}>
+        <a className="btn btn-ghost btn-sm" href={`/certificate/${order.id}`}>🎖️ View puja certificate</a>
+      </div>
     </div>
   );
 }
