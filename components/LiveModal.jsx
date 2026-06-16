@@ -13,9 +13,12 @@ export default function LiveModal({ item, onClose }) {
   if (!item) return null;
 
   const channel = item.channel || LIVE_FALLBACK_CHANNEL;
-  // live_stream?channel= always resolves to the channel's CURRENT live broadcast,
-  // so the embed never points at a stale/expired video id.
-  const src = `https://www.youtube-nocookie.com/embed/live_stream?channel=${channel}&autoplay=1&mute=1&rel=0`;
+  // Every channel exposes an "uploads" playlist whose id is the channel id with
+  // the leading "UC" swapped for "UU". Embedding that always has playable content
+  // (the channel's latest darshan/aarti videos) — unlike live_stream?channel=,
+  // which YouTube now returns as "unavailable" whenever nothing is live right now.
+  const uploads = channel.startsWith("UC") ? "UU" + channel.slice(2) : channel;
+  const src = `https://www.youtube.com/embed/videoseries?list=${uploads}&autoplay=1&mute=1&rel=0`;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -38,10 +41,10 @@ export default function LiveModal({ item, onClose }) {
         </div>
         <div className="modal-body" style={{ paddingTop: 14 }}>
           <p style={{ fontSize: ".84rem", color: "var(--ink-soft)", margin: 0 }}>
-            Streaming the temple's official live darshan. If the aarti isn't live right now, the
-            player shows the channel's next broadcast.{" "}
+            Playing darshan & aarti from the temple's official channel. For the live broadcast when
+            it's on air,{" "}
             <a href={`https://www.youtube.com/channel/${channel}/live`} target="_blank" rel="noopener noreferrer" style={{ color: "var(--saffron-dark)", fontWeight: 700 }}>
-              Open on YouTube ↗
+              open the live stream on YouTube ↗
             </a>
           </p>
         </div>
