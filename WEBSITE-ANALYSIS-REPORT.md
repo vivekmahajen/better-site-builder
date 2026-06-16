@@ -123,3 +123,21 @@ These already work and must be preserved in any future build:
 - Counts: **2 critical · 5 high · 5 medium · 3 low · 4 opportunities.** Preserved features: **11.** Protected advantages: **6.**
 
 **Next step (per skill): confirm which gaps to build (Critical+High or all), any to exclude, and framework (same Next.js). No code will be written until confirmed.**
+
+---
+
+## Reference addendum — PoojaKaro (poojakaro.app) · added 2026-06-16
+
+Site is anti-bot blocked (403); assessment from public listings/search only.
+
+**PoojaKaro positioning:** "Online Puja, Chadhava & **Free Astrology Services**" with **verified pandits**, temple rituals, and Vedic services performed from home.
+
+| Feature | Aastha | PoojaKaro | Note |
+|---|---|---|---|
+| Online puja & chadhava | ✅ | ✅ | parity |
+| Verified pandits | ✅ credentials shown | ✅ claimed | Aastha leads (shows credentials, pronunciation, SLA) |
+| Free astrology / kundli | ✅ free Puja Calculator + Dosha Nivaran | ✅ "free astrology" | parity / Aastha leads (transit-aware, bookable) |
+| Prasad delivery | ⚠️ demo | ✅ implied | already tracked as a gap |
+| Per-stage live order tracking | ✅ | ❌ (not advertised) | Aastha leads |
+
+**Conclusion:** PoojaKaro introduces **no new gaps** beyond those already in this report. Its main differentiator (free astrology) is already matched/exceeded by Aastha's free, transit-aware Puja Calculator. A full audit would need PoojaKaro's rendered HTML or screenshots (currently blocked).

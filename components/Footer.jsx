@@ -28,6 +28,7 @@ export default function Footer() {
           </div>
           <div className="foot-col">
             <h4>Support</h4>
+            <Link href="/faq">FAQ</Link>
             <Link href="#">24×7 Live Chat</Link>
             <Link href="#">Help Center</Link>
             <Link href="#">Contact Us</Link>

@@ -539,3 +539,12 @@ table.cmp tbody tr:nth-child(even) { background: var(--cream); }
 .pc-transit-t { font-family: var(--font-head); font-weight: 700; color: var(--maroon); font-size: 1.05rem; }
 .pc-transit-dates { font-size: .78rem; color: var(--saffron-dark); font-weight: 600; margin-top: 2px; }
 .pc-transit-harness { font-size: .9rem; color: var(--ink); }
+
+/* ---------- FAQ ---------- */
+.faq-list { display: flex; flex-direction: column; gap: 12px; }
+.faq-item { padding: 0; overflow: hidden; }
+.faq-item summary { list-style: none; cursor: pointer; padding: 16px 20px; font-family: var(--font-head); font-weight: 700; color: var(--maroon); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: "+"; font-size: 1.4rem; color: var(--saffron-dark); flex: 0 0 auto; transition: transform .2s; }
+.faq-item[open] summary::after { transform: rotate(45deg); }
+.faq-item p { padding: 0 20px 18px; color: var(--ink-soft); font-size: .95rem; line-height: 1.7; }
