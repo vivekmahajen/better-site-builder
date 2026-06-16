@@ -56,6 +56,7 @@ function PujaRec({ p, onBook }) {
 function BookingModal({ puja, defaultName, onClose }) {
   const [devotee, setDevotee] = useState(defaultName || "");
   const [gotra, setGotra] = useState("");
+  const [family, setFamily] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [order, setOrder] = useState(null);
 
@@ -66,7 +67,7 @@ function BookingModal({ puja, defaultName, onClose }) {
     try {
       const res = await fetch("/api/bookings", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: puja.bookSlug, devotee, gotra }),
+        body: JSON.stringify({ slug: puja.bookSlug, devotee, gotra, family }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "failed");
@@ -96,6 +97,10 @@ function BookingModal({ puja, defaultName, onClose }) {
               <div className="field">
                 <label htmlFor="pc-book-gotra">Gotra (optional)</label>
                 <input id="pc-book-gotra" value={gotra} onChange={(e) => setGotra(e.target.value)} placeholder="e.g. Kashyap" />
+              </div>
+              <div className="field">
+                <label htmlFor="pc-book-family">Include family & friends (optional)</label>
+                <input id="pc-book-family" value={family} onChange={(e) => setFamily(e.target.value)} placeholder="e.g. Anil, Priya — added to the sankalp" />
               </div>
               {puja.bookPrice != null && (
                 <div className="price-line">

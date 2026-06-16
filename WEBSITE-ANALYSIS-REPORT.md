@@ -141,3 +141,24 @@ Site is anti-bot blocked (403); assessment from public listings/search only.
 | Per-stage live order tracking | ✅ | ❌ (not advertised) | Aastha leads |
 
 **Conclusion:** PoojaKaro introduces **no new gaps** beyond those already in this report. Its main differentiator (free astrology) is already matched/exceeded by Aastha's free, transit-aware Puja Calculator. A full audit would need PoojaKaro's rendered HTML or screenshots (currently blocked).
+
+---
+
+## Reference addendum — DevaSeva (devaseva.com) · added 2026-06-16
+
+Site anti-bot blocked (403); assessed from public listings/search.
+
+**DevaSeva positioning:** trusted online seva platform — book sevas (Satyanarayana Vrat, Homams, Abhishekam) in name & gotra at famous temples, with these distinctive features:
+
+| Feature | Aastha | DevaSeva | Action |
+|---|---|---|---|
+| Add family & friends' names to one seva | ❌ → ✅ added | ✅ | **BUILT** — multi-name sankalp on every booking |
+| Temple donations / daan (construction, annadanam…) | ❌ → ✅ added | ✅ | **BUILT** — `/daan` with causes + recorded receipt |
+| Live telecast of *your* seva | ⚠️ 48-hr video + generic live darshan | ✅ | Deferred (needs real streaming infra) |
+| Devotional feed | ❌ | ✅ | Deferred (low priority) |
+| Festive / seasonal sevas | ⚠️ via transit dropdown | ✅ | Deferred (can group existing pujas) |
+| Per-stage live order tracking | ✅ | ❌ | Aastha leads |
+| Verified-priest credentials | ✅ | ⚠️ | Aastha leads |
+| Free transit-aware puja calculator | ✅ | ❌ | Aastha leads |
+
+**Built this round:** multi-name sankalp (family & friends on a single booking, persisted + shown in the sankalp step) and Temple Daan (`/daan`). Deferred: live telecast of own seva, devotional feed, festive-seva grouping.

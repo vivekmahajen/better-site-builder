@@ -100,6 +100,7 @@ function DetailsModal({ puja, onClose, onBook }) {
 function BookingModal({ puja, onClose }) {
   const [devotee, setDevotee] = useState("");
   const [gotra, setGotra] = useState("");
+  const [family, setFamily] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [order, setOrder] = useState(null);
 
@@ -111,7 +112,7 @@ function BookingModal({ puja, onClose }) {
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: puja.slug, devotee, gotra }),
+        body: JSON.stringify({ slug: puja.slug, devotee, gotra, family }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "failed");
@@ -144,6 +145,10 @@ function BookingModal({ puja, onClose }) {
               <div className="field">
                 <label htmlFor="gotra">Gotra (optional)</label>
                 <input id="gotra" value={gotra} onChange={(e) => setGotra(e.target.value)} placeholder="e.g. Kashyap" />
+              </div>
+              <div className="field">
+                <label htmlFor="family">Include family & friends (optional)</label>
+                <input id="family" value={family} onChange={(e) => setFamily(e.target.value)} placeholder="e.g. Anil, Priya, Rohan — names chanted in the sankalp" />
               </div>
               <div className="price-line">
                 <span style={{ color: "var(--ink-soft)" }}>All-inclusive total</span>
