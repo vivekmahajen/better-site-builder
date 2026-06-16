@@ -607,3 +607,87 @@ table.cmp tbody tr:nth-child(even) { background: var(--cream); }
 /* ---------- "Browse by need" filter ---------- */
 .need-filter { text-align: center; margin-bottom: 14px; }
 .need-label { display: block; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--saffron-dark); font-weight: 700; margin-bottom: 8px; }
+
+/* ════════════ Devi Chatbot ════════════ */
+.devi-trigger {
+  position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #8B1A1A 0%, #E8710A 100%);
+  color: #fff; border: 2px solid #D4A017; border-radius: 50px;
+  padding: 8px 16px 8px 8px; cursor: pointer;
+  box-shadow: 0 4px 24px rgba(139,26,26,0.4);
+  transition: transform .2s ease, box-shadow .2s ease;
+  animation: devi-appear .5s ease 1s both;
+}
+.devi-trigger:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(139,26,26,0.5); }
+@keyframes devi-appear { from { opacity:0; transform: translateY(20px) scale(.8);} to { opacity:1; transform: translateY(0) scale(1);} }
+.devi-trigger-label { text-align: left; }
+.devi-trigger-name { display:block; font-family: var(--font-head); font-weight:700; font-size:14px; line-height:1.2; }
+.devi-trigger-sub { display:block; font-size:10px; opacity:.85; letter-spacing:.04em; }
+.devi-pulse { position:absolute; top:-4px; right:-4px; width:14px; height:14px; background:#22c55e; border-radius:50%; border:2px solid #fff; animation: devi-pulse 2s ease-in-out infinite; }
+@keyframes devi-pulse { 0%,100%{ transform: scale(1); opacity:1;} 50%{ transform: scale(1.3); opacity:.7;} }
+
+.devi-window {
+  position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+  width: 380px; max-height: 620px; display: flex; flex-direction: column;
+  background: #FFF8F0; border: 1px solid #D4A017; border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(139,26,26,0.25), 0 0 0 1px rgba(212,160,23,0.2);
+  overflow: hidden; animation: devi-slide-up .3s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes devi-slide-up { from { opacity:0; transform: translateY(20px) scale(.95);} to { opacity:1; transform: translateY(0) scale(1);} }
+
+.devi-header { display:flex; align-items:center; gap:12px; padding:14px 16px; background: linear-gradient(135deg,#8B1A1A 0%,#B8380E 50%,#E8710A 100%); position:relative; }
+.devi-header::before { content:'🕉️'; position:absolute; right:50px; top:50%; transform:translateY(-50%); font-size:28px; opacity:.15; }
+.devi-header-name { font-family: var(--font-head); font-weight:700; font-size:16px; color:#FFF8F0; letter-spacing:.04em; }
+.devi-header-status { font-size:11px; color:rgba(255,248,240,.8); display:flex; align-items:center; gap:5px; }
+.devi-online-dot { width:7px; height:7px; background:#86efac; border-radius:50%; animation: devi-pulse 2s ease-in-out infinite; }
+.devi-close { margin-left:auto; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.2); color:#fff; width:28px; height:28px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; transition: background .15s; }
+.devi-close:hover { background:rgba(255,255,255,.3); }
+
+.devi-avatar { border-radius:50%; overflow:hidden; border:2px solid #D4A017; flex-shrink:0; background:#FFF3E0; display:flex; align-items:center; justify-content:center; }
+
+.devi-messages { flex:1; overflow-y:auto; padding:16px 14px; display:flex; flex-direction:column; gap:12px;
+  background: radial-gradient(ellipse 60% 40% at 30% 20%, rgba(232,113,10,.04) 0%, transparent 60%), radial-gradient(ellipse 50% 35% at 70% 80%, rgba(212,160,23,.04) 0%, transparent 55%), #FFF8F0; }
+.devi-messages::-webkit-scrollbar { width:4px; }
+.devi-messages::-webkit-scrollbar-thumb { background:rgba(212,160,23,.3); border-radius:99px; }
+
+.devi-message { display:flex; gap:8px; max-width:100%; }
+.devi-message.user { flex-direction: row-reverse; }
+.devi-bubble { max-width:78%; padding:10px 14px; border-radius:18px; font-size:14px; line-height:1.6; word-wrap:break-word; }
+.devi-bubble.assistant { background:#fff; color:#2d1000; border:1px solid rgba(212,160,23,.2); border-bottom-left-radius:4px; box-shadow:0 1px 6px rgba(139,26,26,.08); }
+.devi-bubble.user { background: linear-gradient(135deg,#8B1A1A,#E8710A); color:#fff; border-bottom-right-radius:4px; }
+.devi-bubble.assistant em { color:#8B1A1A; font-style:italic; }
+.devi-bubble.assistant strong { color:#8B1A1A; }
+.devi-bubble.assistant a { color:#E8710A; font-weight:600; }
+.devi-timestamp { font-size:10px; color:rgba(45,16,0,.35); margin-top:3px; padding:0 4px; }
+.user .devi-timestamp { text-align:right; }
+
+.devi-typing { display:flex; align-items:center; gap:8px; }
+.devi-typing-bubble { background:#fff; border:1px solid rgba(212,160,23,.2); border-radius:18px; border-bottom-left-radius:4px; padding:12px 16px; display:flex; align-items:center; gap:5px; }
+.devi-dot { width:7px; height:7px; background:#E8710A; border-radius:50%; animation: devi-bounce 1.2s ease-in-out infinite; }
+.devi-dot:nth-child(2){ animation-delay:.15s; } .devi-dot:nth-child(3){ animation-delay:.3s; }
+@keyframes devi-bounce { 0%,80%,100%{ transform: translateY(0); opacity:.5;} 40%{ transform: translateY(-6px); opacity:1;} }
+
+.devi-quick-replies { display:flex; flex-wrap:wrap; gap:7px; margin-top:4px; }
+.devi-quick-reply { font-size:12.5px; padding:6px 12px; background:#fff; border:1px solid #E8710A; border-radius:99px; color:#8B1A1A; cursor:pointer; transition: all .15s; font-family:inherit; }
+.devi-quick-reply:hover { background:#E8710A; color:#fff; }
+
+.devi-input-row { display:flex; gap:8px; padding:10px 12px; border-top:1px solid rgba(212,160,23,.2); background:#fff; align-items:flex-end; }
+.devi-input { flex:1; border:1px solid rgba(212,160,23,.3); border-radius:12px; padding:9px 13px; font-size:14px; font-family:inherit; color:#2d1000; resize:none; max-height:100px; outline:none; background:#FFF8F0; transition: border-color .15s; }
+.devi-input:focus { border-color:#E8710A; }
+.devi-input::placeholder { color:rgba(45,16,0,.35); }
+.devi-send { width:38px; height:38px; border-radius:50%; background: linear-gradient(135deg,#8B1A1A,#E8710A); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition: transform .15s, opacity .15s; }
+.devi-send:hover:not(:disabled){ transform: scale(1.08); }
+.devi-send:disabled { opacity:.4; cursor:not-allowed; }
+
+.devi-footer-note { text-align:center; font-size:10.5px; color:rgba(45,16,0,.4); padding:6px 16px 10px; background:#fff; }
+.devi-footer-note a { color:#E8710A; text-decoration:none; }
+
+@media (max-width: 440px) {
+  .devi-window { bottom:0; right:0; left:0; width:100%; max-height:90vh; border-radius:20px 20px 0 0; }
+  .devi-trigger { bottom:20px; right:16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .devi-trigger, .devi-window, .devi-pulse, .devi-online-dot, .devi-dot { animation: none !important; }
+  .devi-message { transition: none !important; }
+}

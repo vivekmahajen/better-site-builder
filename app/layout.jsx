@@ -2,6 +2,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Fx from "@/components/Fx";
+import DeviChatbot from "@/components/DeviChatbot";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://aastha.example";
 
@@ -58,6 +59,7 @@ export default function RootLayout({ children }) {
         <main>{children}</main>
         <Footer />
         <Fx />
+        <DeviChatbot />
       </body>
     </html>
   );
