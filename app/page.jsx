@@ -21,6 +21,9 @@ const CMP = [
   ["Prasad delivery + courier tracking", false, false, true],
   ["Live darshan", false, true, true],
   ["Live astrology consultation", false, true, true],
+  ["Free, instant birth-chart puja calculator", false, false, false],
+  ["Calculator → one-tap bookable & tracked pujas", false, false, false],
+  ["Factors today's live planetary transits", false, false, false],
   ["Subscription pujas", false, false, true],
   ['Transparent "what\'s included" pricing', false, false, false],
   ["24×7 human support with SLA", false, false, false],
@@ -180,7 +183,7 @@ export default function Home() {
               </tbody>
             </table>
           </div>
-          <p style={{ textAlign: "center", fontSize: ".8rem", color: "var(--ink-soft)", marginTop: 14 }}>Comparison reflects publicly available features & common user feedback as of June 2026; for illustration.</p>
+          <p style={{ textAlign: "center", fontSize: ".8rem", color: "var(--ink-soft)", marginTop: 14 }}>Comparison reflects publicly available features & common user feedback as of June 2026; for illustration. Sri Mandir, VAMA and Utsav do offer kundli-based puja suggestions — but as paid reports or astrologer consultations, not a free, instant, self-serve calculator whose recommended pujas are directly bookable and tracked.</p>
         </div>
       </section>
 
