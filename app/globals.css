@@ -736,3 +736,74 @@ html[dir="rtl"] body { line-height: 1.9; }
 .plans-fineprint { text-align: center; font-size: .78rem; color: var(--ink-soft); margin-top: 22px; }
 @media (max-width: 980px) { .plans-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .plans-grid { grid-template-columns: 1fr; } }
+
+/* ════════════ Aastha Bhakti Radio ════════════ */
+.radio-page { padding: 40px 0; }
+.bhakti-radio { position: relative; background: #0c0618; border-radius: 20px; overflow: hidden; min-height: 640px; }
+.spiritual-bg { position: absolute; inset: 0; pointer-events: none; }
+.spiritual-canvas { width: 100%; height: 100%; display: block; }
+.diya-row { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; padding: 0 20px; }
+.diya-lamp { font-size: 22px; animation: r-flicker 2s ease-in-out infinite; }
+@keyframes r-flicker { 0%,100%{ opacity:.65; transform: scale(1);} 50%{ opacity:1; transform: scale(1.08);} }
+
+.radio-header { position: relative; z-index: 2; text-align: center; padding: 32px 24px 18px; border-bottom: 1px solid rgba(212,160,23,0.12); }
+.radio-om { font-size: 36px; line-height: 1; margin-bottom: 8px; color: #F5C842; animation: r-glow 4s ease-in-out infinite; }
+@keyframes r-glow { 0%,100%{ opacity:.7; filter: brightness(1);} 50%{ opacity:1; filter: brightness(1.4) drop-shadow(0 0 8px rgba(245,200,66,.4));} }
+.radio-brand { font-family: var(--font-head); font-size: 24px; font-weight: 700; color: #F5C842; letter-spacing: .02em; margin-bottom: 4px; }
+.radio-tagline { font-size: 13px; font-style: italic; color: rgba(245,200,66,.45); letter-spacing: .06em; }
+
+.radio-content { position: relative; z-index: 2; padding: 20px 24px 28px; }
+.step-label { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(212,160,23,.5); margin-bottom: 10px; }
+
+.lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 22px; }
+.lang-btn { background: rgba(255,255,255,.04); border: 1px solid rgba(212,160,23,.12); border-radius: 10px; padding: 10px 6px; cursor: pointer; text-align: center; transition: all .2s; color: #FDF6E7; font-family: inherit; }
+.lang-btn:hover, .lang-btn.active { background: rgba(212,160,23,.1); border-color: rgba(212,160,23,.45); color: #F5C842; }
+.lang-name { display: block; font-size: 13px; font-weight: 600; }
+.lang-native { display: block; font-size: 11px; opacity: .6; margin-top: 2px; }
+
+.artist-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 22px; scrollbar-width: none; }
+.artist-scroll::-webkit-scrollbar { display: none; }
+.artist-card { flex-shrink: 0; width: 92px; background: rgba(255,255,255,.04); border: 1px solid rgba(212,160,23,.1); border-radius: 12px; padding: 12px 8px; cursor: pointer; text-align: center; transition: all .2s; font-family: inherit; }
+.artist-card:hover, .artist-card.active { background: rgba(212,160,23,.08); border-color: rgba(212,160,23,.4); }
+.artist-avatar { width: 46px; height: 46px; border-radius: 50%; background: rgba(212,160,23,.12); border: 1px solid rgba(212,160,23,.25); margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.artist-card.active .artist-avatar { background: rgba(212,160,23,.22); border-color: #F5C842; }
+.artist-name { font-size: 11px; color: #FDF6E7; line-height: 1.3; }
+
+.mood-pills { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 14px; scrollbar-width: none; }
+.mood-pills::-webkit-scrollbar { display: none; }
+.mood-pill { flex-shrink: 0; font-size: 11px; padding: 4px 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(212,160,23,.1); border-radius: 99px; cursor: pointer; color: rgba(253,246,231,.5); transition: all .15s; font-family: inherit; }
+.mood-pill:hover, .mood-pill.active { background: rgba(212,160,23,.1); border-color: rgba(212,160,23,.4); color: #F5C842; }
+
+.song-list { display: flex; flex-direction: column; gap: 5px; max-height: 184px; overflow-y: auto; margin-bottom: 22px; scrollbar-width: thin; scrollbar-color: rgba(212,160,23,.15) transparent; }
+.song-item { display: flex; align-items: center; gap: 12px; width: 100%; background: rgba(255,255,255,.025); border: 1px solid rgba(212,160,23,.07); border-radius: 8px; padding: 9px 14px; cursor: pointer; transition: all .15s; font-family: inherit; text-align: left; }
+.song-item:hover, .song-item.active { background: rgba(212,160,23,.07); border-color: rgba(212,160,23,.28); }
+.song-num { font-size: 11px; color: rgba(212,160,23,.4); width: 18px; flex-shrink: 0; }
+.song-title { font-size: 13px; color: #FDF6E7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-item.active .song-title { color: #F5C842; }
+.song-duration { font-size: 11px; color: rgba(253,246,231,.35); margin-left: auto; flex-shrink: 0; }
+.now-playing-dot { width: 6px; height: 6px; border-radius: 50%; background: #F5C842; flex-shrink: 0; animation: r-pulse 1.2s ease-in-out infinite; }
+@keyframes r-pulse { 0%,100%{ opacity:.5; transform: scale(1);} 50%{ opacity:1; transform: scale(1.35);} }
+
+.player-card { background: rgba(255,255,255,.04); border: 1px solid rgba(212,160,23,.18); border-radius: 16px; padding: 18px 20px; }
+.now-label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: rgba(212,160,23,.5); margin-bottom: 8px; }
+.playing-title { font-size: 17px; font-weight: 600; color: #F5C842; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.playing-meta { font-size: 13px; color: rgba(253,246,231,.45); margin-bottom: 16px; }
+.progress-track { height: 4px; background: rgba(255,255,255,.07); border-radius: 99px; margin-bottom: 6px; cursor: pointer; position: relative; }
+.progress-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #8B1A1A, #E8710A, #F5C842); pointer-events: none; }
+.time-row { display: flex; justify-content: space-between; font-size: 11px; color: rgba(253,246,231,.35); margin-bottom: 16px; }
+.controls { display: flex; align-items: center; justify-content: center; gap: 18px; }
+.ctrl-btn { background: none; border: none; cursor: pointer; color: rgba(253,246,231,.6); padding: 6px; border-radius: 8px; display: flex; align-items: center; transition: color .15s; font-size: 18px; }
+.ctrl-btn:hover { color: #F5C842; }
+.play-pause-btn { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #8B1A1A, #E8710A); border: 1.5px solid #D4A017; color: #FFF8F0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform .15s; }
+.play-pause-btn:hover { transform: scale(1.07); }
+.vol-row { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
+.vol-row input { flex: 1; accent-color: #E8710A; }
+
+.visualizer { display: flex; align-items: flex-end; gap: 3px; height: 32px; margin-top: 14px; justify-content: center; }
+.viz-bar { width: 4px; border-radius: 2px; height: 5px; background: rgba(212,160,23,.25); }
+.viz-bar.playing { animation: viz-active var(--dur,.4s) ease-in-out infinite alternate; animation-delay: var(--delay,0s); }
+@keyframes viz-active { from { height: 3px; } to { height: var(--h, 22px); } }
+
+.radio-note { text-align: center; font-size: 11px; color: rgba(253,246,231,.35); margin-top: 16px; }
+@media (max-width: 480px) { .lang-grid { grid-template-columns: repeat(2, 1fr); } .radio-content { padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { .diya-lamp, .radio-om, .now-playing-dot, .viz-bar.playing { animation: none !important; } }
