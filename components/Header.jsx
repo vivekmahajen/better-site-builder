@@ -13,6 +13,7 @@ const NAV = [
   { href: "/dosha-nivaran", key: "nav.dosha_nivaran" },
   { href: "/puja-calculator", key: "nav.puja_calculator" },
   { href: "/daily", key: "nav.daily" },
+  { href: "/radio", key: "nav.radio" },
   { href: "/plans", key: "nav.plans" },
   { href: "/track-order", key: "nav.track_order" },
 ];

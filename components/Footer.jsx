@@ -21,6 +21,7 @@ export default function Footer() {
             <Link href="/dosha-nivaran">{t("nav.dosha_nivaran")}</Link>
             <Link href="/puja-calculator">{t("nav.puja_calculator")}</Link>
             <Link href="/daily">{t("nav.daily")}</Link>
+            <Link href="/radio">{t("nav.radio")}</Link>
             <Link href="/plans">{t("nav.plans")}</Link>
             <Link href="/track-order">{t("nav.track_order")}</Link>
           </div>
