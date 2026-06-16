@@ -8,6 +8,7 @@
     "daan": "Daan",
     "daily": "Daily",
     "track_order": "Track Order",
+    "plans": "Plans",
     "book_puja": "Book a puja",
     "track_my_puja": "Track my puja",
     "home": "Home"
@@ -89,5 +90,10 @@
     "eyebrow": "Free · instant · transit-aware",
     "title": "Puja Calculator",
     "intro": "Enter your birth details for a real Vedic chart, your active doshas, and the pujas best suited to you right now — each one bookable and trackable in a tap."
+  },
+  "plans_page": {
+    "eyebrow": "Membership · cancel anytime",
+    "title": "Choose your path of devotion",
+    "intro": "Start free, or join a membership that pays for itself the first puja — with included rituals, member pricing and Aastha's per-stage tracking, verified priests and transparent pricing on every booking."
   }
 }

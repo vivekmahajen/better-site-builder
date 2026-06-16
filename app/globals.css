@@ -717,3 +717,22 @@ html[dir="rtl"] .devi-window,
 html[dir="rtl"] .devi-trigger { right: auto; left: 28px; }
 html[dir="rtl"] .devi-message.assistant { flex-direction: row-reverse; }
 html[dir="rtl"] body { line-height: 1.9; }
+
+/* ════════════ Plans / membership ════════════ */
+.plans-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; align-items: start; }
+.plan-card { display: flex; flex-direction: column; gap: 14px; padding: 24px 20px; position: relative; }
+.plan-featured { border: 2px solid var(--saffron); box-shadow: 0 12px 36px rgba(236,102,8,.16); }
+.plan-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--maroon), var(--saffron-dark)); color: #fff; font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; white-space: nowrap; }
+.plan-top { text-align: center; }
+.plan-san { font-family: var(--font-head); color: var(--saffron-dark); font-size: 1rem; }
+.plan-name { color: var(--maroon); margin: 2px 0 4px; }
+.plan-tagline { font-size: .82rem; color: var(--ink-soft); min-height: 2.4em; }
+.plan-price { font-family: var(--font-head); font-weight: 700; color: var(--ink); font-size: 2rem; margin-top: 8px; }
+.plan-price small { font-size: .9rem; color: var(--ink-soft); font-weight: 600; }
+.plan-note { font-size: .72rem; color: var(--ink-soft); margin-top: 2px; }
+.plan-feats { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-direction: column; gap: 9px; }
+.plan-feats li { display: flex; gap: 8px; font-size: .86rem; line-height: 1.45; color: var(--ink); }
+.plan-tick { color: var(--green); font-weight: 700; flex: 0 0 auto; }
+.plans-fineprint { text-align: center; font-size: .78rem; color: var(--ink-soft); margin-top: 22px; }
+@media (max-width: 980px) { .plans-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .plans-grid { grid-template-columns: 1fr; } }
