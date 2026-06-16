@@ -1,5 +1,18 @@
 import { NextResponse } from "next/server";
 import { computeChart, getTodayPanchang, buildFallbackReading } from "@/lib/jyotish";
+import { resolvePujaSlug, getPuja } from "@/lib/catalog";
+
+// Attach a bookable puja (slug/name/price) to each recommendation when one matches.
+function withBooking(reading) {
+  const pujas = (reading.pujas || []).map((p) => {
+    const slug = resolvePujaSlug(p.name, p.deity);
+    const bookable = slug ? getPuja(slug) : null;
+    return bookable
+      ? { ...p, bookSlug: slug, bookName: bookable.name, bookPrice: bookable.price }
+      : p;
+  });
+  return { ...reading, pujas };
+}
 
 // JSON schema the model must return (structured outputs).
 const READING_SCHEMA = {
@@ -101,5 +114,5 @@ export async function POST(req) {
     source = "fallback";
   }
 
-  return NextResponse.json({ chart, dashas: chart.dashas, panchang: getTodayPanchang(), reading, source });
+  return NextResponse.json({ chart, dashas: chart.dashas, panchang: getTodayPanchang(), reading: withBooking(reading), source });
 }
