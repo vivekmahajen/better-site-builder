@@ -6,10 +6,15 @@ import TypingIndicator from "./TypingIndicator";
 import QuickReplies from "./QuickReplies";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useRouter } from "next/navigation";
+import { speak, stopSpeaking, ttsSupported, sttSupported, createRecognizer } from "@/lib/voice";
 
 export default function DeviChatbot() {
   const { t, lang, setLanguage } = useLanguage();
   const router = useRouter();
+  const [voiceOn, setVoiceOn] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const recRef = useRef(null);
   const QUICK_REPLIES = [
     { label: t("devi.quick_replies.book_puja"), value: "I want to book a puja" },
     { label: t("devi.quick_replies.calculator"), value: "How does the free puja calculator work?" },
@@ -36,7 +41,37 @@ export default function DeviChatbot() {
     if (isOpen) inputRef.current?.focus();
   }, [isOpen]);
 
-  const sendMessage = async (text) => {
+  const voiceOnRef = useRef(false);
+  useEffect(() => { voiceOnRef.current = voiceOn; }, [voiceOn]);
+  useEffect(() => {
+    setMounted(true);
+    try { if (localStorage.getItem("aastha_voice") === "1") setVoiceOn(true); } catch { /* no storage */ }
+    return () => stopSpeaking();
+  }, []);
+
+  const toggleVoice = () => {
+    setVoiceOn((v) => {
+      const nv = !v;
+      try { localStorage.setItem("aastha_voice", nv ? "1" : "0"); } catch { /* no storage */ }
+      if (!nv) stopSpeaking();
+      return nv;
+    });
+  };
+
+  const startListening = () => {
+    if (listening) { try { recRef.current?.stop(); } catch { /* ignore */ } setListening(false); return; }
+    const r = createRecognizer(
+      lang,
+      (text) => { setListening(false); if (text) { setVoiceOn(true); try { localStorage.setItem("aastha_voice", "1"); } catch { /* */ } sendMessage(text, true); } },
+      () => setListening(false),
+    );
+    if (!r) { return; }
+    recRef.current = r;
+    setListening(true);
+    try { r.start(); } catch { setListening(false); }
+  };
+
+  const sendMessage = async (text, forceSpeak = false) => {
     const userText = (text || input).trim();
     if (!userText || isTyping) return;
 
@@ -62,6 +97,7 @@ export default function DeviChatbot() {
         else if (a.type === "set_language" && a.lang) setLanguage(a.lang);
       });
       setMessages((prev) => [...prev, { role: "assistant", content: data.content, timestamp: new Date() }]);
+      if ((forceSpeak || voiceOnRef.current) && data.content) speak(data.content, lang);
     } catch {
       setMessages((prev) => [...prev, {
         role: "assistant",
@@ -107,7 +143,12 @@ export default function DeviChatbot() {
                 {t("devi.title")} • Online
               </div>
             </div>
-            <button className="devi-close" onClick={() => setIsOpen(false)} aria-label="Close chat">✕</button>
+            {mounted && ttsSupported() && (
+              <button className="devi-voice-toggle" onClick={toggleVoice} aria-label={voiceOn ? "Turn Devi's voice off" : "Turn Devi's voice on"} title={voiceOn ? "Voice on" : "Voice off"}>
+                {voiceOn ? "🔊" : "🔇"}
+              </button>
+            )}
+            <button className="devi-close" onClick={() => { stopSpeaking(); setIsOpen(false); }} aria-label="Close chat">✕</button>
           </div>
 
           <div className="devi-messages" role="log" aria-live="polite">
@@ -122,10 +163,21 @@ export default function DeviChatbot() {
           </div>
 
           <div className="devi-input-row">
+            {mounted && sttSupported() && (
+              <button
+                className={`devi-mic ${listening ? "listening" : ""}`}
+                onClick={startListening}
+                aria-label={listening ? "Stop listening" : "Speak to Devi"}
+                title={listening ? "Listening…" : "Speak to Devi"}
+                type="button"
+              >
+                {listening ? "●" : "🎤"}
+              </button>
+            )}
             <textarea
               ref={inputRef}
               className="devi-input"
-              placeholder={t("devi.placeholder")}
+              placeholder={listening ? "Listening… speak now 🙏" : t("devi.placeholder")}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKey}

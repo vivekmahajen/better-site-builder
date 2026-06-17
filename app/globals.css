@@ -810,3 +810,13 @@ html[dir="rtl"] body { line-height: 1.9; }
 .yt-link { display: inline-block; font-size: 12px; color: #F5C842; text-decoration: none; margin: -8px 0 14px; }
 .yt-link:hover { text-decoration: underline; }
 .song-real { color: #F5C842; font-size: 12px; }
+
+/* ---------- Devi voice controls ---------- */
+.devi-voice-toggle { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.2); color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; margin-left: auto; transition: background .15s; }
+.devi-voice-toggle:hover { background: rgba(255,255,255,.3); }
+.devi-header .devi-voice-toggle + .devi-close { margin-left: 8px; }
+.devi-mic { flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%; background: var(--cream-2, #FFF3E6); border: 1.5px solid rgba(212,160,23,.4); color: var(--maroon, #8B1A1A); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all .15s; }
+.devi-mic:hover { border-color: var(--saffron, #E8710A); }
+.devi-mic.listening { background: #8B1A1A; color: #fff; border-color: #8B1A1A; animation: devi-mic-pulse 1s ease-in-out infinite; }
+@keyframes devi-mic-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(139,26,26,.5); } 50% { box-shadow: 0 0 0 6px rgba(139,26,26,0); } }
+@media (prefers-reduced-motion: reduce) { .devi-mic.listening { animation: none; } }
