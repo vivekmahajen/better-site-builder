@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { PUJAS, CATEGORIES, GOALS } from "@/lib/catalog";
 import PujaBrowser from "@/components/PujaBrowser";
 import PageHero from "@/components/PageHero";
@@ -15,7 +16,7 @@ export default function PujasPage() {
 
       <section>
         <div className="wrap">
-          <PujaBrowser pujas={PUJAS} categories={CATEGORIES} goals={GOALS} showFilters />
+          <Suspense fallback={null}><PujaBrowser pujas={PUJAS} categories={CATEGORIES} goals={GOALS} showFilters /></Suspense>
         </div>
       </section>
 

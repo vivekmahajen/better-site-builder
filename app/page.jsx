@@ -129,7 +129,7 @@ export default function Home() {
             <h2>{t("home.popular_head")}</h2>
             <p>{t("home.popular_lead")}</p>
           </div>
-          <PujaBrowser pujas={PUJAS.slice(0, 6)} />
+          <Suspense fallback={null}><PujaBrowser pujas={PUJAS.slice(0, 6)} /></Suspense>
           <div style={{ textAlign: "center", marginTop: 36 }} className="reveal">
             <Link href="/pujas" className="btn btn-ghost">{t("home.view_all")}</Link>
           </div>

@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { toast } from "@/lib/toast";
 import { CHADHAVA_OFFERINGS } from "@/lib/catalog";
 
@@ -98,10 +99,10 @@ function DetailsModal({ puja, onClose, onBook }) {
   );
 }
 
-function BookingModal({ puja, onClose }) {
-  const [devotee, setDevotee] = useState("");
-  const [gotra, setGotra] = useState("");
-  const [family, setFamily] = useState("");
+function BookingModal({ puja, onClose, prefill }) {
+  const [devotee, setDevotee] = useState(prefill?.devotee || "");
+  const [gotra, setGotra] = useState(prefill?.gotra || "");
+  const [family, setFamily] = useState(prefill?.family || "");
   const [picked, setPicked] = useState([]); // chadhava offering ids
   const [submitting, setSubmitting] = useState(false);
   const [order, setOrder] = useState(null);
@@ -110,8 +111,7 @@ function BookingModal({ puja, onClose }) {
   const chosen = CHADHAVA_OFFERINGS.filter((o) => picked.includes(o.id));
   const total = puja.price + chosen.reduce((s, o) => s + o.price, 0);
 
-  async function submit(e) {
-    e.preventDefault();
+  async function doBook() {
     if (!devotee.trim()) { toast("Please enter the name for the sankalp"); return; }
     setSubmitting(true);
     try {
@@ -130,6 +130,13 @@ function BookingModal({ puja, onClose }) {
       setSubmitting(false);
     }
   }
+  async function submit(e) { e.preventDefault(); doBook(); }
+
+  // Devi can pre-fill and confirm the booking automatically.
+  useEffect(() => {
+    if (prefill?.autoSubmit && (prefill?.devotee || "").trim()) doBook();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -199,9 +206,22 @@ export default function PujaBrowser({ pujas, categories, goals, showFilters = fa
   const [goal, setGoal] = useState("All");
   const [booking, setBooking] = useState(null);
   const [details, setDetails] = useState(null);
+  const [autoBook, setAutoBook] = useState(null);
   const shown = pujas.filter(
     (p) => (active === "All" || p.category === active) && (goal === "All" || (p.goals || []).includes(goal)),
   );
+
+  // Devi / deep links: /pujas?book=<slug>&devotee=..&gotra=..&family=..&auto=1
+  const params = useSearchParams();
+  useEffect(() => {
+    const slug = params.get("book");
+    if (!slug) return;
+    const p = pujas.find((x) => x.slug === slug);
+    if (!p) return;
+    setAutoBook({ devotee: params.get("devotee") || "", gotra: params.get("gotra") || "", family: params.get("family") || "", autoSubmit: params.get("auto") === "1" });
+    setBooking(p);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
 
   return (
     <>
@@ -237,7 +257,7 @@ export default function PujaBrowser({ pujas, categories, goals, showFilters = fa
           onBook={(p) => { setDetails(null); setBooking(p); }}
         />
       )}
-      {booking && <BookingModal puja={booking} onClose={() => setBooking(null)} />}
+      {booking && <BookingModal puja={booking} prefill={autoBook} onClose={() => { setBooking(null); setAutoBook(null); }} />}
     </>
   );
 }

@@ -153,7 +153,10 @@ async function routeActions(text, lang) {
   else if (has("astrolog", "jyotish", "consult", "ज्योतिष")) acts.push({ type: "navigate", href: "/astrology" });
   else if (has("daan", "donat", "annadan", "charity", "दान")) acts.push({ type: "navigate", href: "/daan" });
   else if (has("panchang", "tithi", "muhurat", "muhurta", "rahu kaal", "पंचांग", "मुहूर्त")) acts.push({ type: "navigate", href: "/daily" });
-  else if (has("book", "puja", "pooja", "chadhava", "havan", "rudrabhishek", "बुक", "पूजा")) acts.push({ type: "navigate", href: "/pujas" });
+  else if (has("book", "puja", "pooja", "chadhava", "havan", "rudrabhishek", "बुक", "पूजा")) {
+    const r = await executeTool("book_puja", { puja_name: text });
+    acts.push(r.action || { type: "navigate", href: "/pujas" });
+  }
   return acts.filter(Boolean);
 }
 
