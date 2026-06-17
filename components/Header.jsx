@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageSelector from "@/components/LanguagePicker/LanguageSelector";
 
@@ -20,8 +20,21 @@ const NAV = [
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const path = usePathname();
   const { t } = useLanguage();
+
+  useEffect(() => {
+    let on = true;
+    fetch("/api/auth/me").then((r) => r.json()).then((d) => { if (on) setUser(d.user); }).catch(() => {});
+    return () => { on = false; };
+  }, [path]);
+
+  async function logout() {
+    await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+    setUser(null);
+    window.location.href = "/";
+  }
   return (
     <header className="site-header">
       <div className="wrap nav">
@@ -36,7 +49,11 @@ export default function Header() {
         </nav>
         <div className="nav-cta">
           <LanguageSelector />
-          <Link href="/track-order" className="btn btn-ghost btn-sm">{t("nav.track_my_puja")}</Link>
+          {user ? (
+            <span className="nav-account"><span className="nav-hi">🙏 {user.name?.split(" ")[0] || "You"}</span><button className="btn btn-ghost btn-sm" onClick={logout}>Logout</button></span>
+          ) : (
+            <Link href="/login" className="btn btn-ghost btn-sm">Log in</Link>
+          )}
           <Link href="/pujas" className="btn btn-primary btn-sm">{t("nav.book_puja")}</Link>
         </div>
         <button className="nav-toggle" aria-label="Menu" onClick={() => setOpen((v) => !v)}>☰</button>
