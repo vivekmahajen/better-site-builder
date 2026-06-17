@@ -22,7 +22,10 @@ export default function LoginPage() {
       if (!res.ok) { setError(data.message || "Login failed."); return; }
       const u = data.user;
       if (u && !u.onboarding_complete) router.push(RESUME[u.onboarding_step] || "/onboarding/language");
-      else router.push("/");
+      else {
+        const next = new URLSearchParams(window.location.search).get("next");
+        router.push(next && next.startsWith("/") ? next : "/");
+      }
     } catch { setError("Connection error. Please try again."); }
     finally { setLoading(false); }
   }
