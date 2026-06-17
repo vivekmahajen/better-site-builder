@@ -13,6 +13,8 @@ const CMP = [
   [false, false, false], [false, false, false], [false, false, false], [false, false, false],
   [true, true, true], [false, false, false], [false, false, false], [false, false, false],
   [false, false, true], [false, false, false], [false, false, false],
+  // AI agent · voice · bhakti radio · multi-language — Aastha-only
+  [false, false, false], [false, false, false], [false, false, false], [false, false, false],
 ];
 
 const Cell = ({ on }) => on ? <td className="yes">✓</td> : <td className="no">✕</td>;
