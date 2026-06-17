@@ -1,6 +1,7 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { relevantTransits, CAT_EMOJI, transitDates } from "@/lib/transits";
 
 const PLANET_ICONS = { Sun: "☀️", Moon: "🌙", Mars: "🔴", Mercury: "💚", Jupiter: "⭐", Venus: "💗", Saturn: "🪐", Rahu: "🐍", Ketu: "☄️" };
@@ -143,12 +144,12 @@ export default function PujaCalculator() {
   const [booking, setBooking] = useState(null);
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
-  async function submit(e) {
-    e.preventDefault();
-    if (!form.name.trim() || !form.dob || !form.pob.trim()) { setError("Please enter your name, date of birth, and place of birth."); return; }
+  async function runReading(f) {
+    const fm = f || form;
+    if (!fm.name.trim() || !fm.dob || !fm.pob.trim()) { setError("Please enter your name, date of birth, and place of birth."); return; }
     setError(""); setLoading(true); setData(null);
     try {
-      const res = await fetch("/api/puja-reading", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      const res = await fetch("/api/puja-reading", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(fm) });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Could not calculate your reading.");
       setData(json);
@@ -157,6 +158,21 @@ export default function PujaCalculator() {
       setError(err.message || "Something went wrong. Please try again.");
     } finally { setLoading(false); }
   }
+
+  function submit(e) { e.preventDefault(); runReading(form); }
+
+  // Devi agent / shared links can prefill (and auto-run) the calculator.
+  const params = useSearchParams();
+  useEffect(() => {
+    const pre = {};
+    for (const k of ["name", "dob", "tob", "pob", "concern"]) { const v = params.get(k); if (v) pre[k] = v; }
+    if (!Object.keys(pre).length) return;
+    setForm((f) => ({ ...f, ...pre }));
+    if (params.get("auto") === "1" && pre.name && pre.dob && pre.pob) {
+      runReading({ name: pre.name, dob: pre.dob, tob: pre.tob || "", pob: pre.pob, concern: pre.concern || "", gender: "male", transitId: "" });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
 
   function reset() { setData(null); setForm({ name: "", dob: "", tob: "", pob: "", concern: "", gender: "male", transitId: "" }); window.scrollTo({ top: 0, behavior: "smooth" }); }
 

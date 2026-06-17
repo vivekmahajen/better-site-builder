@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import PujaCalculator from "@/components/PujaCalculator";
 import PageHero from "@/components/PageHero";
 
@@ -14,7 +15,7 @@ export default function PujaCalculatorPage() {
 
       <section>
         <div className="wrap" style={{ maxWidth: 920 }}>
-          <PujaCalculator />
+          <Suspense fallback={null}><PujaCalculator /></Suspense>
         </div>
       </section>
     </>
