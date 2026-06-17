@@ -1,11 +1,9 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthShell from "@/components/auth/AuthShell";
 
 export default function SignupPage() {
-  const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
   const [show, setShow] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -24,7 +22,8 @@ export default function SignupPage() {
       const res = await fetch("/api/auth/signup", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: form.name, email: form.email, password: form.password }) });
       const data = await res.json();
       if (!res.ok) { setError(data.message || "Could not create account."); return; }
-      router.push("/onboarding/language");
+      window.location.assign("/onboarding/language"); // full nav so the session cookie passes the gate
+      return;
     } catch { setError("Something went wrong. Please try again."); }
     finally { setLoading(false); }
   }

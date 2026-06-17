@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthShell from "@/components/auth/AuthShell";
 
 const RESUME = { 2: "/onboarding/language", 3: "/onboarding/pricing", 4: "/onboarding/concern", 5: "/onboarding/welcome-pujas" };
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
@@ -21,11 +19,13 @@ export default function LoginPage() {
       const data = await res.json();
       if (!res.ok) { setError(data.message || "Login failed."); return; }
       const u = data.user;
-      if (u && !u.onboarding_complete) router.push(RESUME[u.onboarding_step] || "/onboarding/language");
+      // Full navigation so the freshly-set session cookie passes the middleware gate.
+      if (u && !u.onboarding_complete) window.location.assign(RESUME[u.onboarding_step] || "/onboarding/language");
       else {
         const next = new URLSearchParams(window.location.search).get("next");
-        router.push(next && next.startsWith("/") ? next : "/");
+        window.location.assign(next && next.startsWith("/") ? next : "/");
       }
+      return;
     } catch { setError("Connection error. Please try again."); }
     finally { setLoading(false); }
   }
