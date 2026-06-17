@@ -159,14 +159,14 @@ export default function Home() {
           <div className="compare reveal">
             <table className="cmp">
               <thead>
-                <tr><th>{t("home.cmp_th_feature")}</th><th>Sri Mandir</th><th>VAMA</th><th>Utsav</th><th className="us">Aastha</th></tr>
+                <tr><th>{t("home.cmp_th_feature")}</th><th className="us">Aastha</th><th>Sri Mandir</th><th>VAMA</th><th>Utsav</th></tr>
               </thead>
               <tbody>
                 {features.map((label, i) => (
                   <tr key={label}>
                     <td>{label}</td>
-                    <Cell on={(CMP[i] || [])[0]} /><Cell on={(CMP[i] || [])[1]} /><Cell on={(CMP[i] || [])[2]} />
                     <td className="col-us yes">✓</td>
+                    <Cell on={(CMP[i] || [])[0]} /><Cell on={(CMP[i] || [])[1]} /><Cell on={(CMP[i] || [])[2]} />
                   </tr>
                 ))}
               </tbody>
