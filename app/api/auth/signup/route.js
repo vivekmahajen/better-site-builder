@@ -24,6 +24,10 @@ export async function POST(req) {
     return res;
   } catch (err) {
     console.error("signup failed:", err);
-    return NextResponse.json({ message: "Could not create your account. Please try again." }, { status: 500 });
+    const dbDown = /POSTGRES_URL|DATABASE_URL|ECONNREFUSED|connect|password authentication|getaddrinfo|timeout/i.test(String(err?.message || err));
+    return NextResponse.json(
+      { message: dbDown ? "Our database isn't reachable yet. Please check back shortly." : "Could not create your account. Please try again." },
+      { status: dbDown ? 503 : 500 },
+    );
   }
 }
