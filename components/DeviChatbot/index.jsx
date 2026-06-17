@@ -13,6 +13,7 @@ export default function DeviChatbot() {
   const router = useRouter();
   const [voiceOn, setVoiceOn] = useState(false);
   const [listening, setListening] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
   const [mounted, setMounted] = useState(false);
   const recRef = useRef(null);
   const QUICK_REPLIES = [
@@ -53,7 +54,7 @@ export default function DeviChatbot() {
     setVoiceOn((v) => {
       const nv = !v;
       try { localStorage.setItem("aastha_voice", nv ? "1" : "0"); } catch { /* no storage */ }
-      if (!nv) stopSpeaking();
+      if (!nv) { stopSpeaking(); setSpeaking(false); }
       return nv;
     });
   };
@@ -97,7 +98,9 @@ export default function DeviChatbot() {
         else if (a.type === "set_language" && a.lang) setLanguage(a.lang);
       });
       setMessages((prev) => [...prev, { role: "assistant", content: data.content, timestamp: new Date() }]);
-      if ((forceSpeak || voiceOnRef.current) && data.content) speak(data.content, lang);
+      if ((forceSpeak || voiceOnRef.current) && data.content) {
+        speak(data.content, lang, { onStart: () => setSpeaking(true), onEnd: () => setSpeaking(false) });
+      }
     } catch {
       setMessages((prev) => [...prev, {
         role: "assistant",
@@ -135,12 +138,18 @@ export default function DeviChatbot() {
       {isOpen && (
         <div className="devi-window" role="dialog" aria-label="Chat with Devi">
           <div className="devi-header">
-            <DeviAvatar size="header" />
+            {mounted && sttSupported() ? (
+              <button className="devi-header-avatar" onClick={startListening} aria-label="Tap to talk to Devi" title="Tap to talk">
+                <DeviAvatar size="header" />
+              </button>
+            ) : (
+              <DeviAvatar size="header" />
+            )}
             <div className="devi-header-info">
               <div className="devi-header-name">{t("devi.name")}</div>
               <div className="devi-header-status">
-                <span className="devi-online-dot" aria-hidden />
-                {t("devi.title")} • Online
+                <span className={`devi-online-dot ${speaking ? "speaking" : listening ? "listening" : ""}`} aria-hidden />
+                {listening ? "Listening… 🎤" : speaking ? "Devi is speaking… 🔊" : `${t("devi.title")} • Online`}
               </div>
             </div>
             {mounted && ttsSupported() && (
@@ -148,7 +157,7 @@ export default function DeviChatbot() {
                 {voiceOn ? "🔊" : "🔇"}
               </button>
             )}
-            <button className="devi-close" onClick={() => { stopSpeaking(); setIsOpen(false); }} aria-label="Close chat">✕</button>
+            <button className="devi-close" onClick={() => { stopSpeaking(); setSpeaking(false); setIsOpen(false); }} aria-label="Close chat">✕</button>
           </div>
 
           <div className="devi-messages" role="log" aria-live="polite">
