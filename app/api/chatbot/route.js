@@ -4,7 +4,7 @@ import { executeTool } from "@/lib/agent/execute";
 
 export const runtime = "nodejs";
 
-const AGENT_NOTE = `\n\nYOU ARE AN AGENT: when the devotee wants an action — play music/bhajan, book a puja, track an order, open the calculator/darshan/dosha/astrology/daan/panchang, or change language — CALL the matching tool. Confirm language before play_radio only if it's unclear. For the Puja Calculator, gather the person's name, date of birth (YYYY-MM-DD) and place of birth (city, country) — time of birth is optional — and pass them to open_puja_calculator so the form fills and the reading runs automatically; if a detail is missing, ask for it warmly before calling. After tools run, reply warmly in the user's language describing what you did. Never reveal tool names or show raw JSON.`;
+const AGENT_NOTE = `\n\nYOU ARE AN AGENT: when the devotee wants an action — play music/bhajan, book a puja, track an order, open the calculator/darshan/dosha/astrology/daan/panchang, or change language — CALL the matching tool. Confirm language before play_radio only if it's unclear. For a recurring/scheduled play ("play X at 6 AM every morning", "daily at 7"), call schedule_play with time (HH:MM 24h), repeat ('daily' unless they say once), and the song_title or deity — then confirm and mention it plays while Aastha is open. For the Puja Calculator, gather the person's name, date of birth (YYYY-MM-DD) and place of birth (city, country) — time of birth is optional — and pass them to open_puja_calculator so the form fills and the reading runs automatically; if a detail is missing, ask for it warmly before calling. After tools run, reply warmly in the user's language describing what you did. Never reveal tool names or show raw JSON.`;
 
 const SYSTEM_PROMPT = `You are Devi (देवी), the sacred guide and AI assistant for Aastha — "Bridge to the Divine," India's most trusted online puja booking platform. You are a warm, traditionally dressed Indian woman with deep knowledge of Vedic rituals, Hindu astrology (Jyotish), puja vidhi, and the Aastha platform itself.
 
@@ -140,6 +140,19 @@ async function routeActions(text, lang) {
   if (has("speak english", "in english", "english me")) acts.push((await executeTool("set_user_language", { lang_code: "en" })).action);
   else if (has("hindi me", "in hindi", "हिंदी", "हिन्दी")) acts.push((await executeTool("set_user_language", { lang_code: "hi" })).action);
 
+  const wantsSchedule = has("every morning", "every day", "everyday", "each morning", "each day", "daily", "schedule", "remind", "every night") && /\d/.test(q);
+  if (wantsSchedule) {
+    const r = await executeTool("schedule_play", {
+      time: (text || "").match(/\d{1,2}(:\d{2})?\s*(am|pm)?/i)?.[0] || "06:00",
+      repeat: has("every", "daily", "each") ? "daily" : "once",
+      song_title: text,
+      deity: detectDeity(q),
+      lang: detectRadioLang(q, lang),
+    });
+    if (r.action) acts.push(r.action);
+    return acts.filter(Boolean);
+  }
+
   if (has("track", "order id", "aas-", "where is my", "ट्रैक", "प्रसाद", "my order")) {
     const m = (text || "").match(/AAS-\d+/i);
     const r = await executeTool("track_order", { order_id: m ? m[0] : "" });
@@ -188,7 +201,14 @@ export async function POST(req) {
 
   if (!process.env.ANTHROPIC_API_KEY) {
     const actions = await routeActions(lastUser, lang);
-    return NextResponse.json({ content: fallback(lastUser), actions, mode: "fallback" });
+    const sched = actions.find((a) => a?.type === "schedule")?.schedule;
+    let content = fallback(lastUser);
+    if (sched) {
+      content = lang === "hi"
+        ? `🙏 हो गया जी — मैं हर ${sched.repeat === "daily" ? "रोज़" : "बार"} **${sched.title}** ${sched.time} बजे चलाऊंगी। (यह तब चलेगा जब Aastha आपके ब्राउज़र में खुला हो; सूचना की अनुमति दें तो याद दिला दूंगी।) 🕉️`
+        : `🙏 Done ji — I'll play **${sched.title}** at ${sched.time}${sched.repeat === "daily" ? " every day" : ""}. (It plays while Aastha is open in your browser; allow notifications and I'll remind you.) 🕉️`;
+    }
+    return NextResponse.json({ content, actions, mode: "fallback" });
   }
 
   // Agentic loop: let Devi call tools, run them, feed results back, then reply.

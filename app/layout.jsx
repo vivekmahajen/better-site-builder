@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Fx from "@/components/Fx";
 import DeviChatbot from "@/components/DeviChatbot";
+import Reminders from "@/components/Reminders";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://aastha.example";
@@ -65,6 +66,7 @@ export default function RootLayout({ children }) {
           <Footer />
           <Fx />
           <DeviChatbot />
+          <Reminders />
         </LanguageProvider>
       </body>
     </html>

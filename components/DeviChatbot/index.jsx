@@ -96,6 +96,7 @@ export default function DeviChatbot() {
         if (!a) return;
         if ((a.type === "navigate" || a.type === "play_radio") && a.href) router.push(a.href);
         else if (a.type === "set_language" && a.lang) setLanguage(a.lang);
+        else if (a.type === "schedule" && a.schedule) saveSchedule(a.schedule);
       });
       setMessages((prev) => [...prev, { role: "assistant", content: data.content, timestamp: new Date() }]);
       if ((forceSpeak || voiceOnRef.current) && data.content) {
@@ -111,6 +112,15 @@ export default function DeviChatbot() {
       setIsTyping(false);
     }
   };
+
+  function saveSchedule(schedule) {
+    try {
+      const list = JSON.parse(localStorage.getItem("aastha_schedules") || "[]").filter((s) => !(s.songId === schedule.songId && s.time === schedule.time));
+      list.push(schedule);
+      localStorage.setItem("aastha_schedules", JSON.stringify(list));
+    } catch { /* no storage */ }
+    try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch { /* ignore */ }
+  }
 
   const handleKey = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
