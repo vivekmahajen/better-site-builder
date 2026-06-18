@@ -119,7 +119,12 @@ export default function DeviChatbot() {
       list.push(schedule);
       localStorage.setItem("aastha_schedules", JSON.stringify(list));
     } catch { /* no storage */ }
-    try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch { /* ignore */ }
+    try {
+      if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission().then(() => window.dispatchEvent(new Event("aastha-schedules-changed")));
+      }
+    } catch { /* ignore */ }
+    try { window.dispatchEvent(new Event("aastha-schedules-changed")); } catch { /* ignore */ }
   }
 
   const handleKey = (e) => {

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F2A03D"/>
+      <stop offset="1" stop-color="#E8710A"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#g)"/>
+  <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="300" fill="#fff" font-family="Georgia, serif">ॐ</text>
+</svg>

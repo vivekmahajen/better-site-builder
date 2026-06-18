@@ -27,5 +27,5 @@ export function middleware(req) {
 
 // Run on all routes except APIs, Next internals and static SEO files.
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.json|sw.js|icon.svg).*)"],
 };

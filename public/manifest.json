@@ -1,0 +1,12 @@
+{
+  "name": "Aastha — Bridge to the Divine",
+  "short_name": "Aastha",
+  "description": "Online puja & chadhava, live darshan, astrology, bhakti radio and Devi — your AI sacred guide.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff8f0",
+  "theme_color": "#E8710A",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
