@@ -8,8 +8,12 @@ import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://aastha.example";
 
+export const viewport = { themeColor: "#E8710A" };
+
 export const metadata = {
   metadataBase: new URL(SITE_URL),
+  manifest: "/manifest.json",
+  appleWebApp: { capable: true, title: "Aastha", statusBarStyle: "default" },
   title: {
     default: "Aastha — Your bridge to the divine | Online Puja, Chadhava, Live Darshan & Astrology",
     template: "%s",
