@@ -60,8 +60,19 @@ const LANG_ADDITIONS = {
   pa: 'LANGUAGE: Respond primarily in Punjabi (ਪੰਜਾਬੀ). Greeting "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ 🙏". Address users as "ਆਪ ਜੀ". Keep URLs in English.',
   or: 'LANGUAGE: Respond primarily in Odia (ଓଡ଼ିଆ). Greeting "ନମସ୍କାର 🙏". Address users as "ଆପଣ". Keep URLs in English.',
 };
+// Build the system prompt as cacheable blocks. The large, identical base
+// (persona + Aastha knowledge + agent note) is marked with cache_control so
+// Anthropic prompt-caches it (and the tools before it) — cutting input cost
+// ~90% on every call after the first within the 5-min window, and guaranteeing
+// a hit on each iteration of the agentic loop below. The small per-language
+// instruction goes in an uncached suffix so the cached prefix is shared across
+// all languages.
 function systemFor(lang) {
-  return LANG_ADDITIONS[lang] ? `${SYSTEM_PROMPT}\n\n${LANG_ADDITIONS[lang]}` : SYSTEM_PROMPT;
+  const blocks = [
+    { type: "text", text: SYSTEM_PROMPT + AGENT_NOTE, cache_control: { type: "ephemeral" } },
+  ];
+  if (LANG_ADDITIONS[lang]) blocks.push({ type: "text", text: LANG_ADDITIONS[lang] });
+  return blocks;
 }
 
 // Hindi rule-based fallback (used when no API key and lang === 'hi').
@@ -215,7 +226,7 @@ export async function POST(req) {
   try {
     const { default: Anthropic } = await import("@anthropic-ai/sdk");
     const client = new Anthropic();
-    const system = systemFor(lang) + AGENT_NOTE;
+    const system = systemFor(lang);
     let convo = clean;
     const actions = [];
     let text = "";
