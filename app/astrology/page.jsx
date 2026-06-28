@@ -1,25 +1,26 @@
 import Link from "next/link";
-import { ASTROLOGERS } from "@/lib/catalog";
+import { verifiedAstrologers } from "@/lib/data";
 import AstroGrid from "@/components/AstroGrid";
 
 export const metadata = {
   title: "Talk to Verified Astrologers — Live Vedic consultations | Aastha",
-  description: "Connect live with verified Vedic astrologers for kundli, marriage, career, vastu and remedies — transparent per-minute pricing, credentials and ratings shown.",
+  description: "Connect live with verified Vedic astrologers for kundli, marriage, career, vastu and remedies — transparent per-minute pricing and published credentials.",
 };
 
 export default function AstrologyPage() {
+  const astrologers = verifiedAstrologers();
   return (
     <>
       <section className="page-hero">
         <div className="wrap">
           <div className="breadcrumb"><Link href="/">Home</Link> / Astrology</div>
           <h1>Talk to a verified astrologer</h1>
-          <p>Real guidance from credential-checked Vedic astrologers — for career, marriage, kundli, vastu and remedies. Transparent per-minute pricing, with ratings and experience shown up front.</p>
+          <p>Real guidance from credential-checked Vedic astrologers — for career, marriage, kundli, vastu and remedies. Transparent per-minute pricing, with published credentials and experience shown up front.</p>
         </div>
       </section>
 
       <section>
-        <div className="wrap"><AstroGrid items={ASTROLOGERS} /></div>
+        <div className="wrap"><AstroGrid items={astrologers} /></div>
       </section>
 
       <section style={{ background: "var(--cream-2)" }}>

@@ -34,7 +34,7 @@ export async function POST(req) {
       gotra: gotra ? String(gotra).trim() : null,
       family: family ? String(family).trim().slice(0, 500) : null,
       offerings: offerings ? String(offerings).trim().slice(0, 300) : null,
-      priest: `${puja.priest} (Verified ✓, ${puja.priestYears} yrs)`,
+      priest: "Verified pandit — assigned on confirmation",
     });
     return NextResponse.json({ id: order.id, order }, { status: 201 });
   } catch (err) {

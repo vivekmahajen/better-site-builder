@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aastha:astrologer",
+  "title": "Astrologer",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["id", "name", "sources", "verification", "contact", "correction_contact", "disclaimer"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^astro_[a-z0-9_]+$" },
+    "name": { "type": "string", "minLength": 2 },
+    "tradition": { "type": "array", "items": { "type": "string" } },
+    "specialties": { "type": "array", "items": { "type": "string" } },
+    "languages": { "type": "array", "items": { "type": "string" } },
+    "city": { "type": "string" },
+    "state": { "type": "string" },
+    "years_active": { "type": ["integer", "null"] },
+    "credentials": { "type": "array", "items": { "type": "string" } },
+    "affiliations": { "type": "array", "items": { "type": "string" } },
+    "public_profile": { "type": ["string", "null"] },
+    "contact": { "$ref": "aastha:common#/$defs/contact" },
+    "consultation": { "type": "object" },
+    "sources": { "$ref": "aastha:common#/$defs/sources" },
+    "verification": { "type": "string", "enum": ["verified", "unverified", "needs_review"] },
+    "correction_contact": { "type": "string" },
+    "disclaimer": { "type": "string", "minLength": 10 }
+  }
+}
