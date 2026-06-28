@@ -96,5 +96,42 @@
     "eyebrow": "Membership · cancel anytime",
     "title": "Choose your path of devotion",
     "intro": "Start free, or join a membership that pays for itself the first puja — with included rituals, member pricing and Aastha's per-stage tracking, verified priests and transparent pricing on every booking."
+  },
+  "directory": {
+    "verified": "Verified",
+    "official_profile": "Official profile ↗",
+    "request_correction": "Request correction or removal",
+    "book_via_temple": "Book via temple ↗",
+    "credentials": "Credentials (self-published)",
+    "affiliations": "Affiliations",
+    "approx": "(approx.)",
+    "astro_empty_title": "Verified astrologer listings coming soon",
+    "astro_empty_body": "We only list real, credential-verified astrologers who have consented to be here — so this directory is being built carefully rather than filled with placeholders. Please check back shortly.",
+    "priest_empty_title": "Verified temple-priest listings coming soon",
+    "priest_empty_body": "Priest listings are sourced from official temple-trust records and published only when verified. Many temples don't release per-priest details — so this directory stays sparse and accurate rather than padded with invented names. Where a priest isn't listed, please use the temple's official booking channel."
+  },
+  "astro_page": {
+    "title": "Talk to a verified astrologer",
+    "intro": "Real guidance from credential-checked Vedic astrologers — for career, marriage, kundli, vastu and remedies. Transparent per-minute pricing, with published credentials and experience shown up front.",
+    "features_eyebrow": "No surprises",
+    "features_title": "Honest astrology, by design",
+    "f1_title": "Verified credentials",
+    "f1_body": "Every astrologer is credential-checked, with experience and specialities shown openly.",
+    "f2_title": "Per-minute clarity",
+    "f2_body": "You see the rate before you connect, and a live timer during the call. No upselling, no fear tactics.",
+    "f3_title": "From insight to action",
+    "f3_body": "If a remedy puja is recommended, book it in one tap — then track it from sankalp to prasad."
+  },
+  "priests_page": {
+    "title": "Verified temple priests",
+    "intro": "Priests sourced from official temple-trust records and published only when verified. We prefer routing you through each temple's official booking channel rather than publishing personal contact details — and we list a priest's personal contact only with their recorded consent.",
+    "features_eyebrow": "How this directory works",
+    "features_title": "Sourced, consenting, correctable",
+    "f1_title": "Official records",
+    "f1_body": "Listings come from temple-trust records — never invented names or numbers.",
+    "f2_title": "Consent for contact",
+    "f2_body": "Personal phone numbers appear only with the priest's recorded consent; otherwise we route through the temple.",
+    "f3_title": "Correction & removal",
+    "f3_body": "Every listed person can request an edit or removal in one click."
   }
 }
