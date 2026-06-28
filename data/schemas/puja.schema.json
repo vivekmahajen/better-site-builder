@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aastha:puja",
+  "title": "Puja",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["id", "name", "category", "deity", "significance", "benefits", "disclaimer", "sources", "verification"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^puja_[a-z0-9_]+$" },
+    "name": {
+      "type": "object",
+      "required": ["common"],
+      "properties": {
+        "iast": { "type": "string" },
+        "common": { "type": "string", "minLength": 2 },
+        "regional": { "type": "object" }
+      }
+    },
+    "category": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "nitya_daily", "deity_specific", "homa_havan", "graha_shanti_navagraha",
+          "dosha_nivaran", "prosperity_wealth", "health_longevity", "protection",
+          "marriage_relationship", "progeny", "ancestral_shraddha_pitru",
+          "education_knowledge", "victory_obstacle_removal", "festival_seasonal",
+          "samskara_lifecycle", "temple_signature"
+        ]
+      }
+    },
+    "deity": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "tradition": { "type": "array", "items": { "type": "string" } },
+    "significance": { "type": "string", "minLength": 10 },
+    "benefits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["intent", "framing"],
+        "properties": {
+          "intent": { "type": "string" },
+          "framing": { "type": "string" },
+          "source": { "type": "string" }
+        }
+      }
+    },
+    "performed_for_occasions": { "type": "array", "items": { "type": "string" } },
+    "associated_doshas": { "type": "array", "items": { "type": "string" } },
+    "best_time": { "type": "object" },
+    "procedure_summary": { "type": "string" },
+    "samagri": { "type": "array", "items": { "type": "string" } },
+    "duration": { "type": "string" },
+    "typical_offering_range_inr": { "type": "string" },
+    "regional_variants": { "type": "array" },
+    "offered_at_temples": { "type": "array", "items": { "type": "string", "pattern": "^temple_[a-z0-9_]+$" } },
+    "related_pujas": { "type": "array", "items": { "type": "string", "pattern": "^puja_[a-z0-9_]+$" } },
+    "mantras": { "type": "array" },
+    "media": { "type": "object" },
+    "disclaimer": { "type": "string", "minLength": 10 },
+    "sources": { "$ref": "aastha:common#/$defs/sources" },
+    "verification": { "type": "string", "enum": ["verified", "unverified", "needs_review"] },
+    "i18n_keys": { "type": "object" }
+  }
+}

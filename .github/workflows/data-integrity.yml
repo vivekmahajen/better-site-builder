@@ -1,0 +1,32 @@
+name: data-integrity
+
+# Enforces the Aastha Data-Integrity Doctrine on every change to sacred data,
+# schemas, or the validation tooling. Fails the PR on any violation:
+# missing provenance, missing puja disclaimer, banned cure/guarantee claims,
+# published PII without consent, or broken puja<->temple<->priest links.
+
+on:
+  pull_request:
+    paths:
+      - "data/**"
+      - "scripts/validate-data.mjs"
+      - "scripts/ingest.mjs"
+      - ".github/workflows/data-integrity.yml"
+  push:
+    branches: [main]
+    paths:
+      - "data/**"
+      - "scripts/validate-data.mjs"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Self-test the integrity gates (banned-claim + consent)
+        run: node scripts/validate-data.mjs --selftest
+      - name: Validate all datasets
+        run: node scripts/validate-data.mjs

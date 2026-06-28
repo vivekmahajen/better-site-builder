@@ -2,6 +2,19 @@
 import { toast } from "@/lib/toast";
 
 export default function AstroGrid({ items }) {
+  if (!items || items.length === 0) {
+    return (
+      <div className="card reveal" style={{ textAlign: "center", padding: "2.5rem 1.5rem" }}>
+        <div style={{ fontSize: "2rem" }}>🔮</div>
+        <h3 style={{ marginTop: ".5rem" }}>Verified astrologer listings coming soon</h3>
+        <p style={{ color: "var(--ink-soft)", maxWidth: "40ch", margin: ".5rem auto 0" }}>
+          We only list real, credential-verified astrologers who have consented to be here —
+          so this directory is being built carefully rather than filled with placeholders.
+          Please check back shortly.
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="grid grid-3">
       {items.map((a) => (

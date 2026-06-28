@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aastha:priest",
+  "title": "Temple Priest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["id", "name", "temple_id", "role", "sources", "verification", "contact", "correction_contact"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^priest_[a-z0-9_]+$" },
+    "name": { "type": "string", "minLength": 2 },
+    "temple_id": { "type": "string", "pattern": "^temple_[a-z0-9_]+$" },
+    "role": { "type": "string" },
+    "tradition": { "type": "array", "items": { "type": "string" } },
+    "languages": { "type": "array", "items": { "type": "string" } },
+    "services_offered": { "type": "array", "items": { "type": "string", "pattern": "^puja_[a-z0-9_]+$" } },
+    "contact": { "$ref": "aastha:common#/$defs/contact" },
+    "official_booking_channel": { "type": ["string", "null"] },
+    "sources": { "$ref": "aastha:common#/$defs/sources" },
+    "verification": { "type": "string", "enum": ["verified", "unverified", "needs_review"] },
+    "correction_contact": { "type": "string" }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aastha:common",
+  "title": "Shared definitions",
+  "$defs": {
+    "sources": {
+      "type": "array",
+      "description": "Provenance. Each source is a real, citable origin.",
+      "items": {
+        "type": "object",
+        "required": ["url", "retrieved"],
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "publisher": { "type": "string" },
+          "retrieved": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
+        }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "description": "PII. Published phone/whatsapp/email/address ONLY with contact_consent:true + consent_source.",
+      "properties": {
+        "phone": { "type": ["string", "null"] },
+        "whatsapp": { "type": ["string", "null"] },
+        "email": { "type": ["string", "null"] },
+        "address": { "type": ["string", "null"] },
+        "contact_consent": { "type": "boolean" },
+        "consent_source": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
