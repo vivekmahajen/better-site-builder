@@ -27,7 +27,7 @@ export default function Footer() {
           </div>
           <div className="foot-col">
             <h4>{t("footer.trust")}</h4>
-            <Link href="#">Verified Priests</Link>
+            <Link href="/priests">Verified Priests</Link>
             <Link href="#">48-hr Video SLA</Link>
             <Link href="#">Refund Policy</Link>
             <Link href="#">How fulfilment works</Link>
