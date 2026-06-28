@@ -1,3 +1,4 @@
+"use client";
 // Verified astrologer directory cards.
 //
 // DOCTRINE: shows ONLY neutral, verifiable signals (tradition, specialties,
@@ -5,6 +6,7 @@
 // quality score or rating about a named human. Contact details render ONLY when
 // the person consented (contact.contact_consent === true). Every card carries a
 // one-click correction/removal path.
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 function ContactBlock({ contact }) {
   if (!contact || contact.contact_consent !== true) return null;
@@ -20,15 +22,14 @@ function ContactBlock({ contact }) {
 }
 
 export default function AstroGrid({ items }) {
+  const { t } = useTranslation();
   if (!items || items.length === 0) {
     return (
       <div className="card reveal" style={{ textAlign: "center", padding: "2.5rem 1.5rem" }}>
         <div style={{ fontSize: "2rem" }}>🔮</div>
-        <h3 style={{ marginTop: ".5rem" }}>Verified astrologer listings coming soon</h3>
+        <h3 style={{ marginTop: ".5rem" }}>{t("directory.astro_empty_title")}</h3>
         <p style={{ color: "var(--ink-soft)", maxWidth: "44ch", margin: ".5rem auto 0" }}>
-          We only list real, credential-verified astrologers who have consented to be here —
-          so this directory is being built carefully rather than filled with placeholders.
-          Please check back shortly.
+          {t("directory.astro_empty_body")}
         </p>
       </div>
     );
@@ -39,7 +40,7 @@ export default function AstroGrid({ items }) {
         <article className="card astro-card reveal" key={a.id}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <h3 style={{ margin: 0 }}>{a.name}</h3>
-            <span className="badge" title="Verified from a cited source" style={{ fontSize: ".7rem" }}>✓ Verified</span>
+            <span className="badge" title="Verified from a cited source" style={{ fontSize: ".7rem" }}>✓ {t("directory.verified")}</span>
           </div>
           {(a.tradition?.length || a.specialties?.length) && (
             <div className="spec">{[...(a.tradition || []), ...(a.specialties || [])].join(" • ")}</div>
@@ -50,24 +51,24 @@ export default function AstroGrid({ items }) {
             {a.languages?.length ? ` · ${a.languages.join(", ")}` : ""}
           </div>
           {a.credentials?.length > 0 && (
-            <p style={{ fontSize: ".82rem", margin: "8px 0 0" }}><strong>Credentials (self-published):</strong> {a.credentials.join("; ")}</p>
+            <p style={{ fontSize: ".82rem", margin: "8px 0 0" }}><strong>{t("directory.credentials")}:</strong> {a.credentials.join("; ")}</p>
           )}
           {a.affiliations?.length > 0 && (
-            <p style={{ fontSize: ".82rem", margin: "4px 0 0" }}><strong>Affiliations:</strong> {a.affiliations.join("; ")}</p>
+            <p style={{ fontSize: ".82rem", margin: "4px 0 0" }}><strong>{t("directory.affiliations")}:</strong> {a.affiliations.join("; ")}</p>
           )}
           {a.consultation?.fee_range_inr && (
-            <p className="rate" style={{ margin: "10px 0 0" }}>{a.consultation.fee_range_inr}<small style={{ fontWeight: 400, color: "var(--ink-soft)" }}> (approx.)</small></p>
+            <p className="rate" style={{ margin: "10px 0 0" }}>{a.consultation.fee_range_inr}<small style={{ fontWeight: 400, color: "var(--ink-soft)" }}> {t("directory.approx")}</small></p>
           )}
           <ContactBlock contact={a.contact} />
           <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
             {a.public_profile && (
-              <a className="btn btn-primary btn-sm" href={a.public_profile} target="_blank" rel="noopener noreferrer nofollow">Official profile ↗</a>
+              <a className="btn btn-primary btn-sm" href={a.public_profile} target="_blank" rel="noopener noreferrer nofollow">{t("directory.official_profile")}</a>
             )}
           </div>
           {a.correction_contact && (
             <p style={{ marginTop: 10, fontSize: ".75rem" }}>
               <a href={`mailto:${a.correction_contact}?subject=${encodeURIComponent(`Correction/removal request: ${a.name} (${a.id})`)}`} style={{ color: "var(--ink-soft)" }}>
-                Request correction or removal
+                {t("directory.request_correction")}
               </a>
             </p>
           )}

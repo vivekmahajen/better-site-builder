@@ -22,7 +22,7 @@ const BUNDLES = {
 };
 
 // Map a key namespace → which bundle file holds it.
-const NS = { nav: "common", buttons: "common", hero: "common", trust: "common", footer: "common", language_selector: "common", details: "pujas", booking: "pujas", devi: "chatbot", deities: "religious", greetings: "religious", panchang: "religious" };
+const NS = { nav: "common", buttons: "common", hero: "common", trust: "common", footer: "common", language_selector: "common", directory: "common", astro_page: "common", priests_page: "common", details: "pujas", booking: "pujas", devi: "chatbot", deities: "religious", greetings: "religious", panchang: "religious" };
 
 function resolve(bundle, key, params) {
   const file = NS[key.split(".")[0]] || "common";
