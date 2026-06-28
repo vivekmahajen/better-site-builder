@@ -2,16 +2,26 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-// ElevenLabs voices for Devi, chosen by language. Keys/IDs stay server-side.
+// ElevenLabs voices for Devi. One multilingual voice serves EVERY language so
+// English, Hindi and the rest all work; per-language env vars can override it.
+// Keys/IDs stay server-side.
 //   ELEVENLABS_API_KEY     — your ElevenLabs key (required)
-//   ELEVENLABS_VOICE_ID    — English female voice (default: "Rachel")
-//   ELEVENLABS_VOICE_ID_HI — Hindi female voice (set this to your Hindi voice id)
-const VOICE_EN = process.env.ELEVENLABS_VOICE_ID || "21m00Tcm4TlvDq8ikWAM";
+//   ELEVENLABS_VOICE_ID    — optional English-specific voice id
+//   ELEVENLABS_VOICE_ID_HI — optional Hindi-specific voice id
+//   ELEVENLABS_MODEL       — optional model override (default: eleven_multilingual_v2)
+const VOICE_EN = process.env.ELEVENLABS_VOICE_ID || "";
 const VOICE_HI = process.env.ELEVENLABS_VOICE_ID_HI || "";
+// Shared fallback: whichever voice IS configured powers any language without a
+// dedicated id (so if you only set the Hindi voice, English uses it too and
+// still speaks). Rachel is the last-resort default.
+const VOICE_DEFAULT = VOICE_EN || VOICE_HI || "21m00Tcm4TlvDq8ikWAM";
+// Multilingual model handles English, Hindi and many Indian languages — the same
+// model the working Hindi voice already uses (turbo_v2_5 was the English failure).
+const MODEL = process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2";
+const PER_LANG = { en: VOICE_EN, hi: VOICE_HI };
 
 function voiceFor(lang) {
-  if (lang === "hi") return { id: VOICE_HI, model: "eleven_multilingual_v2" };
-  return { id: VOICE_EN, model: process.env.ELEVENLABS_MODEL || "eleven_turbo_v2_5" };
+  return { id: PER_LANG[lang] || VOICE_DEFAULT, model: MODEL };
 }
 
 export async function POST(req) {
