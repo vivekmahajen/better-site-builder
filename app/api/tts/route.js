@@ -11,17 +11,30 @@ export const runtime = "nodejs";
 //   ELEVENLABS_MODEL       — optional model override (default: eleven_multilingual_v2)
 const VOICE_EN = process.env.ELEVENLABS_VOICE_ID || "";
 const VOICE_HI = process.env.ELEVENLABS_VOICE_ID_HI || "";
-// Shared fallback: whichever voice IS configured powers any language without a
-// dedicated id (so if you only set the Hindi voice, English uses it too and
-// still speaks). Rachel is the last-resort default.
-const VOICE_DEFAULT = VOICE_EN || VOICE_HI || "21m00Tcm4TlvDq8ikWAM";
+const RACHEL = "21m00Tcm4TlvDq8ikWAM"; // ElevenLabs default premade voice
 // Multilingual model handles English, Hindi and many Indian languages — the same
 // model the working Hindi voice already uses (turbo_v2_5 was the English failure).
 const MODEL = process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2";
-const PER_LANG = { en: VOICE_EN, hi: VOICE_HI };
 
-function voiceFor(lang) {
-  return { id: PER_LANG[lang] || VOICE_DEFAULT, model: MODEL };
+// Ordered list of voice ids to try for a language. The language's own voice is
+// tried first; if it fails (e.g. an English id that isn't on the account) we
+// fall through to the known-good Hindi voice, then Rachel — so English speaks as
+// long as ANY configured voice works. Empties/dupes removed.
+function voiceCandidates(lang) {
+  const preferred = lang === "hi" ? VOICE_HI : VOICE_EN;
+  return [...new Set([preferred, VOICE_HI, VOICE_EN, RACHEL].filter(Boolean))];
+}
+
+async function synth(key, voiceId, text) {
+  return fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: "POST",
+    headers: { "xi-api-key": key, "Content-Type": "application/json", Accept: "audio/mpeg" },
+    body: JSON.stringify({
+      text,
+      model_id: MODEL,
+      voice_settings: { stability: 0.4, similarity_boost: 0.85, style: 0.15, use_speaker_boost: true },
+    }),
+  });
 }
 
 export async function POST(req) {
@@ -33,29 +46,26 @@ export async function POST(req) {
   const text = String(body?.text || "").slice(0, 1500).trim();
   if (!text) return NextResponse.json({ error: "no_text" }, { status: 400 });
 
-  const { id: voiceId, model } = voiceFor(body?.lang);
-  if (!voiceId) return NextResponse.json({ error: "voice_not_configured", lang: body?.lang || "en" }, { status: 503 });
+  const candidates = voiceCandidates(body?.lang);
+  if (!candidates.length) return NextResponse.json({ error: "voice_not_configured", lang: body?.lang || "en" }, { status: 503 });
 
-  try {
-    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-      method: "POST",
-      headers: { "xi-api-key": key, "Content-Type": "application/json", Accept: "audio/mpeg" },
-      body: JSON.stringify({
-        text,
-        model_id: model,
-        voice_settings: { stability: 0.4, similarity_boost: 0.85, style: 0.15, use_speaker_boost: true },
-      }),
-    });
-    if (!r.ok) {
+  let lastStatus = 0;
+  for (const voiceId of candidates) {
+    try {
+      const r = await synth(key, voiceId, text);
+      if (r.ok) {
+        return new NextResponse(await r.arrayBuffer(), {
+          headers: { "Content-Type": "audio/mpeg", "Cache-Control": "no-store" },
+        });
+      }
+      lastStatus = r.status;
       const detail = await r.text().catch(() => "");
-      console.error("ElevenLabs TTS failed:", r.status, detail.slice(0, 300));
-      return NextResponse.json({ error: "tts_failed", status: r.status }, { status: 502 });
+      console.error(`ElevenLabs TTS failed for voice ${voiceId}:`, r.status, detail.slice(0, 200));
+      // 401/429 = key/quota problem — retrying other voices won't help.
+      if (r.status === 401 || r.status === 429) break;
+    } catch (err) {
+      console.error(`ElevenLabs TTS error for voice ${voiceId}:`, err);
     }
-    return new NextResponse(await r.arrayBuffer(), {
-      headers: { "Content-Type": "audio/mpeg", "Cache-Control": "no-store" },
-    });
-  } catch (err) {
-    console.error("ElevenLabs TTS error:", err);
-    return NextResponse.json({ error: "server_error" }, { status: 500 });
   }
+  return NextResponse.json({ error: "tts_failed", status: lastStatus || 502 }, { status: 502 });
 }
