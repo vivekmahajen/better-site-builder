@@ -61,8 +61,8 @@ export async function POST(req) {
       lastStatus = r.status;
       const detail = await r.text().catch(() => "");
       console.error(`ElevenLabs TTS failed for voice ${voiceId}:`, r.status, detail.slice(0, 200));
-      // 401/429 = key/quota problem — retrying other voices won't help.
-      if (r.status === 401 || r.status === 429) break;
+      // Always try the next candidate — a per-voice 401/404 (a voice the account
+      // can't access) must NOT abort before we reach the known-good Hindi voice.
     } catch (err) {
       console.error(`ElevenLabs TTS error for voice ${voiceId}:`, err);
     }
