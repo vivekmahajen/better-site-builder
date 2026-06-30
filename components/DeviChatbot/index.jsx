@@ -6,7 +6,7 @@ import TypingIndicator from "./TypingIndicator";
 import QuickReplies from "./QuickReplies";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useRouter } from "next/navigation";
-import { speak, stopSpeaking, ttsSupported, sttSupported, createRecognizer } from "@/lib/voice";
+import { speak, stopSpeaking, unlockAudio, ttsSupported, sttSupported, createRecognizer } from "@/lib/voice";
 
 export default function DeviChatbot() {
   const { t, lang, setLanguage } = useLanguage();
@@ -51,6 +51,7 @@ export default function DeviChatbot() {
   }, []);
 
   const toggleVoice = () => {
+    unlockAudio(); // within this click → keep audio playable for later replies
     setVoiceOn((v) => {
       const nv = !v;
       try { localStorage.setItem("aastha_voice", nv ? "1" : "0"); } catch { /* no storage */ }
@@ -60,6 +61,7 @@ export default function DeviChatbot() {
   };
 
   const startListening = () => {
+    unlockAudio(); // mic tap is a gesture → unlock playback for Devi's reply
     if (listening) { try { recRef.current?.stop(); } catch { /* ignore */ } setListening(false); return; }
     const r = createRecognizer(
       lang,
@@ -75,6 +77,8 @@ export default function DeviChatbot() {
   const sendMessage = async (text, forceSpeak = false) => {
     const userText = (text || input).trim();
     if (!userText || isTyping) return;
+    unlockAudio(); // this call is inside the send gesture; keeps the premium
+    // voice playable when the reply arrives seconds later (agent loop latency).
 
     setInput("");
     setShowQuickReplies(false);
